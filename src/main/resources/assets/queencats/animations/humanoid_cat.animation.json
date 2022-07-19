@@ -1,0 +1,112 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.humanoidcat.idle": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"rightArm": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*150)*5"]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*150)*-5"]
+					}
+				},
+				"bone5": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*150)*25", 0]
+					}
+				},
+				"bone6": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time*75)*0.22", 0]
+					}
+				},
+				"pai_R3": {
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.humanoidcat.walk": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"rightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*150)*-25", 0, 0]
+					}
+				},
+				"leftLeg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*150)*-25", 0, 0]
+					}
+				},
+				"rightLeg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*150)*25", 0, 0]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*150)*25", 0, 0]
+					}
+				},
+				"bone5": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*150)*25", 0]
+					}
+				}
+			}
+		},
+		"animation.humanoidcat.sitting": {
+			"loop": true,
+			"animation_length": 16.58333,
+			"bones": {
+				"rightLeg": {
+					"rotation": {
+						"vector": ["-87 - this", "8 - this", "-this"]
+					}
+				},
+				"leftLeg": {
+					"rotation": {
+						"vector": ["-87 - this", "-8 - this", "-this"]
+					}
+				},
+				"all": {
+					"position": {
+						"vector": [0, -7, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.humanoidcat.attack": {
+			"animation_length": 0.45833,
+			"bones": {
+				"rightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*400)*-80", 0, "math.sin(query.anim_time*400)*-40"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
