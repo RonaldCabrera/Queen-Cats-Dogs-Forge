@@ -1,7 +1,9 @@
 package net.pevori.queencats.entity.custom;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -14,7 +16,6 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.scoreboard.AbstractTeam;
@@ -23,10 +24,14 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.pevori.queencats.entity.ModEntities;
+import net.pevori.queencats.entity.variant.PrincessCatVariant;
 import net.pevori.queencats.item.ModItems;
+import net.pevori.queencats.sound.ModSounds;
 
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -106,18 +111,24 @@ public class PrincessCatEntity extends TameableEntity implements IAnimatable {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_DOLPHIN_AMBIENT;
+        return ModSounds.HUMANOID_CAT_AMBIENT;
+    }
+
+    @Override
+    public SoundEvent getEatSound(ItemStack stack) {
+        return ModSounds.HUMANOID_CAT_EAT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_DOLPHIN_HURT;
+        return ModSounds.HUMANOID_CAT_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_PIG_DEATH;
+        return ModSounds.HUMANOID_CAT_DEATH;
     }
+
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
@@ -126,7 +137,7 @@ public class PrincessCatEntity extends TameableEntity implements IAnimatable {
 
     /* TAMEABLE ENTITY */
     private static final TrackedData<Boolean> SITTING =
-        DataTracker.registerData(QueenCatEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        DataTracker.registerData(PrincessCatEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
         @Override
         public ActionResult interactMob(PlayerEntity player, Hand hand) {
@@ -194,12 +205,14 @@ public class PrincessCatEntity extends TameableEntity implements IAnimatable {
         public void writeCustomDataToNbt(NbtCompound nbt) {
             super.writeCustomDataToNbt(nbt);
             nbt.putBoolean("isSitting", this.dataTracker.get(SITTING));
+            nbt.putInt("Variant", this.getTypeVariant());
         }
     
         @Override
         public void readCustomDataFromNbt(NbtCompound nbt) {
             super.readCustomDataFromNbt(nbt);
             this.dataTracker.set(SITTING, nbt.getBoolean("isSitting"));
+            this.dataTracker.set(DATA_ID_TYPE_VARIANT, nbt.getInt("Variant"));
         }
     
         @Override
@@ -215,6 +228,30 @@ public class PrincessCatEntity extends TameableEntity implements IAnimatable {
         protected void initDataTracker() {
             super.initDataTracker();
             this.dataTracker.startTracking(SITTING, false);
+            this.dataTracker.startTracking(DATA_ID_TYPE_VARIANT, 0);
         }
+
+    /* VARIANTS */
+    private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT =
+    DataTracker.registerData(PrincessCatEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        PrincessCatVariant variant = Util.getRandom(PrincessCatVariant.values(), this.random);
+        setVariant(variant);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    public PrincessCatVariant getVariant() {
+        return PrincessCatVariant.byId(this.getTypeVariant() & 255);
+    }
+
+    private int getTypeVariant() {
+        return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
+    }
+
+    protected void setVariant(PrincessCatVariant variant) {
+        this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
+    }
 
 }

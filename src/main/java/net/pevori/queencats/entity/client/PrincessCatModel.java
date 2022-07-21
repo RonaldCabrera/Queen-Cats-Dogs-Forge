@@ -16,7 +16,7 @@ public class PrincessCatModel extends AnimatedGeoModel<PrincessCatEntity> {
 
     @Override
     public Identifier getTextureLocation(PrincessCatEntity object) {
-        return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_white.png");
+        return PrincessCatRenderer.LOCATION_BY_VARIANT.get(object.getVariant());
     }
 
     @Override

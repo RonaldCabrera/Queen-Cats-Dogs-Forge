@@ -1,0 +1,27 @@
+{
+    "humanoid_cat_ambient":{
+        "subtitle": "queencats.humanoid_cat_ambient",
+        "sounds": [
+            "queencats:humanoid_cat_ambient_1",
+            "queencats:humanoid_cat_ambient_2"
+        ]
+    },
+    "humanoid_cat_eat":{
+        "subtitle": "queencats.humanoid_cat_eat",
+        "sounds": [
+            "queencats:humanoid_cat_eat"
+        ]
+    },
+    "humanoid_cat_hurt":{
+        "subtitle": "queencats.humanoid_cat_hurt",
+        "sounds": [
+            "queencats:humanoid_cat_hurt"
+        ]
+    },
+    "humanoid_cat_death":{
+        "subtitle": "queencats.humanoid_cat_death",
+        "sounds": [
+            "queencats:humanoid_cat_death"
+        ]
+    }
+}

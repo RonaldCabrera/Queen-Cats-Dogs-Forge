@@ -1,10 +1,18 @@
 {
+    "itemGroup.queencats.queencats": "Queen Cats",
+
     "item.queencats.golden_fish": "Golden Fish",
-    "item.queencats.golden_fish_tooltip": "Filled with §l§bKemomimi§r energy",
+    "item.queencats.nekomimi_potion": "Nekomimi Potion",
+    "item.queencats.glinted_item_tooltip": "Overflows with §l§bNekomimi§r energy",
 
     "item.queencats.queen_cat_spawn_egg": "Queen Cat Spawn Egg",
-
     "item.queencats.princess_cat_spawn_egg": "Princess Cat Spawn Egg",
 
-    "itemGroup.queencats.queencats": "Queen Cats"
+    "entity.queencats.queen_cat": "Queen Cat",
+    "entity.queencats.princess_cat": "Princess Cat",
+
+    "queencats.humanoid_cat_ambient": "Humanoid Cat Meows",
+    "queencats.humanoid_cat_eat": "Humanoid Cat Eats",
+    "queencats.humanoid_cat_hurt": "Humanoid Cat Hurts",
+    "queencats.humanoid_cat_death": "Humanoid Cat Dies"
 }

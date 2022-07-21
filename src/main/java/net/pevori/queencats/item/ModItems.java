@@ -13,6 +13,10 @@ public class ModItems {
         new GlintedItem(new FabricItemSettings().group(ModItemGroup.QUEENCATS).food(ModFoodComponents.GOLDEN_FISH))
     );
 
+    public static final Item NEKOMIMI_POTION = registerItem("nekomimi_potion", 
+    new GlintedItem(new FabricItemSettings().group(ModItemGroup.QUEENCATS))
+);
+
     public static final Item QUEEN_CAT_SPAWN_EGG = registerItem("queen_cat_spawn_egg",
         new SpawnEggItem(ModEntities.QUEEN_CAT, 0xF3F7FA, 0xB9EDFE,
         new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))

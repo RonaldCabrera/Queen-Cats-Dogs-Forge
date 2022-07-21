@@ -28,6 +28,6 @@ public class GlintedItem extends Item{
 
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(new TranslatableText("item.queencats.golden_fish_tooltip"));
+        tooltip.add(new TranslatableText("item.queencats.glinted_item_tooltip"));
     }
 }
