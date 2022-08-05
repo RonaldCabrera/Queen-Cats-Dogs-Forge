@@ -98,6 +98,7 @@
 			}
 		},
 		"animation.humanoidcat.attack": {
+			"loop": true,
 			"animation_length": 0.45833,
 			"bones": {
 				"rightArm": {

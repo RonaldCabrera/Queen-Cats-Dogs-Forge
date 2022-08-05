@@ -4,6 +4,7 @@
   "package": "net.pevori.queencats.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "QueenCatMixin"
   ],
   "client": [
     "ExampleMixin"

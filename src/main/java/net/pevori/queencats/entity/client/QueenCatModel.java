@@ -2,6 +2,7 @@ package net.pevori.queencats.entity.client;
 
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.QueenCatEntity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -11,6 +12,10 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 public class QueenCatModel extends AnimatedGeoModel<QueenCatEntity> {
     @Override
     public Identifier getModelLocation(QueenCatEntity object) {
+        if(object.hasStackEquipped(EquipmentSlot.CHEST)){
+            return new Identifier(QueenCats.MOD_ID, "geo/humanoid_cat_armor.geo.json");
+        }
+
         return new Identifier(QueenCats.MOD_ID, "geo/humanoid_cat.geo.json");
     }
 

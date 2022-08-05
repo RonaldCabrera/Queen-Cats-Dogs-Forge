@@ -5,7 +5,9 @@ import java.util.Comparator;
 
 public enum QueenCatVariant {
     WHITE(0),
-    BLACK(1);
+    BLACK(1),
+    CALICO(2),
+    CALLAS(3);
 
     private static final QueenCatVariant[] BY_ID = Arrays.stream(values()).sorted(Comparator.
     comparingInt(QueenCatVariant::getId)).toArray(QueenCatVariant[]::new);
@@ -13,14 +15,14 @@ public enum QueenCatVariant {
     private final int id;
 
     QueenCatVariant(int id) {
-    this.id = id;
+        this.id = id;
     }
 
     public int getId() {
-    return this.id;
+        return this.id;
     }
 
     public static QueenCatVariant byId(int id) {
-    return BY_ID[id % BY_ID.length];
+        return BY_ID[id % BY_ID.length];
     }
 }

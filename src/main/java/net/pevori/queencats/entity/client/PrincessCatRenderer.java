@@ -18,6 +18,10 @@ public class PrincessCatRenderer extends GeoEntityRenderer<PrincessCatEntity> {
                 new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_white.png"));
         map.put(PrincessCatVariant.BLACK,
                 new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_black.png"));
+        map.put(PrincessCatVariant.CALICO,
+                new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_calico.png"));
+        map.put(PrincessCatVariant.CALLAS,
+                new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_callas.png"));
     });
 
     public PrincessCatRenderer(EntityRendererFactory.Context ctx) {
