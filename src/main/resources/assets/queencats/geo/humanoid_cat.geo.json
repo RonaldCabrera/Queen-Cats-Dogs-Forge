@@ -16,7 +16,7 @@
 					"pivot": [0, -2, 0]
 				},
 				{
-					"name": "Arm4",
+					"name": "Arm1",
 					"parent": "all",
 					"pivot": [-4, 23, 0],
 					"rotation": [-15, 0, 15],
@@ -24,7 +24,7 @@
 				},
 				{
 					"name": "rightArm",
-					"parent": "Arm4",
+					"parent": "Arm1",
 					"pivot": [-3.2265, 23.21848, 0.81537],
 					"cubes": [
 						{"origin": [-4.93071, 12.14878, -0.63034], "size": [2, 12, 2], "uv": [36, 44]},

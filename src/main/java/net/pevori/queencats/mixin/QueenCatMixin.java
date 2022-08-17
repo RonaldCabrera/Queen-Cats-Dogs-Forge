@@ -9,7 +9,6 @@ import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Hand;
-import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.custom.QueenCatEntity;
 import net.pevori.queencats.item.ModItems;

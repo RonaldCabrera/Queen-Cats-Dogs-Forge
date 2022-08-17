@@ -157,7 +157,7 @@ public class PrincessCatEntity extends HumanoidCatEntity implements IAnimatable 
 
         Ingredient itemForHealing = Ingredient.ofItems(Items.COD, Items.SALMON, ModItems.GOLDEN_FISH);
         Item itemForTaming = ModItems.GOLDEN_FISH;
-        Item itemForGrowth = ModItems.NEKOMIMI_POTION;
+        Item itemForGrowth = ModItems.KEMOMIMI_POTION;
 
         if (item instanceof DyeItem && this.isOwner(player)) {
             DyeColor dyeColor = ((DyeItem) item).getColor();

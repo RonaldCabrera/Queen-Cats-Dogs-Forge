@@ -13,8 +13,10 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.GhastEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -38,9 +40,8 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.ModEntities;
-import net.pevori.queencats.entity.goals.HumanoidCatMeleeGoal;
-import net.pevori.queencats.entity.variant.PrincessCatVariant;
-import net.pevori.queencats.entity.variant.QueenCatVariant;
+import net.pevori.queencats.entity.goals.HumanoidDogMeleeGoal;
+import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 
@@ -53,18 +54,18 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
+public class QueenDogEntity extends HumanoidDogEntity implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
 
-    public QueenCatEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public QueenDogEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        PrincessCatEntity baby = ModEntities.PRINCESS_CAT.create(world);
-        PrincessCatVariant variant = Util.getRandom(PrincessCatVariant.values(), this.random);
+        PrincessDogEntity baby = ModEntities.PRINCESS_DOG.create(world);
+        HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
         baby.setVariant(variant);
 
         if (this.isTamed()) {
@@ -91,8 +92,7 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        //this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.add(2, new HumanoidCatMeleeGoal(this, 1.0D));
+        this.goalSelector.add(2, new HumanoidDogMeleeGoal(this, 1.0D));
         this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
         this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_FISH), false));
@@ -100,30 +100,30 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0, 1));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
-
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
+        this.targetSelector.add(4, new ActiveTargetGoal<AbstractSkeletonEntity>((MobEntity)this, AbstractSkeletonEntity.class, false));
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving() && !this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.walk", true));
             return PlayState.CONTINUE;
         }
 
         if (this.isSitting()) {
             event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.sitting", true));
+                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.sitting", true));
             return PlayState.CONTINUE;
         }
 
         if (this.getAttackingState()) {
             event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.attack", true));
+                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", true));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", true));
         return PlayState.CONTINUE;
     }
 
@@ -164,7 +164,7 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
     }
 
     /* TAMEABLE ENTITY */
-    private static final TrackedData<Boolean> SITTING = DataTracker.registerData(QueenCatEntity.class,
+    private static final TrackedData<Boolean> SITTING = DataTracker.registerData(QueenDogEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
 
     @Override
@@ -172,9 +172,8 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
         ItemStack itemstack = player.getStackInHand(hand);
         Item item = itemstack.getItem();
 
-        Item itemForTaming = ModItems.GOLDEN_FISH;
-        Ingredient itemForHealing = Ingredient.ofItems(Items.COD, Items.SALMON, ModItems.GOLDEN_FISH);
-        Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
+        Item itemForTaming = ModItems.GOLDEN_BONE;
+        Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE,
                 Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
 
         if (isBreedingItem(itemstack)) {
@@ -184,13 +183,11 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
         if (item instanceof DyeItem && this.isOwner(player)) {
             DyeColor dyeColor = ((DyeItem) item).getColor();
             if (dyeColor == DyeColor.BLACK) {
-                this.setVariant(QueenCatVariant.BLACK);
+                this.setVariant(HumanoidDogVariant.HUSKY);
             } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(QueenCatVariant.WHITE);
-            } else if (dyeColor == DyeColor.ORANGE) {
-                this.setVariant(QueenCatVariant.CALICO);
-            } else if (dyeColor == DyeColor.GRAY) {
-                this.setVariant(QueenCatVariant.CALLAS);
+                this.setVariant(HumanoidDogVariant.SHIRO);
+            } else if (dyeColor == DyeColor.PINK) {
+                this.setVariant(HumanoidDogVariant.CREAM);
             }
             
             if (!player.getAbilities().creativeMode) {
@@ -216,7 +213,7 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
             return ActionResult.SUCCESS;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTamed() && this.getHealth() < getMaxHealth()) {
+        if ((isMeatItem(item)) && isTamed() && this.getHealth() < getMaxHealth()) {
             if (this.world.isClient()) {
                 return ActionResult.CONSUME;
             } else {
@@ -282,6 +279,10 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
         return this.dataTracker.get(SITTING);
     }
 
+    public boolean isMeatItem(Item item) {
+        return item.isFood() && item.getFoodComponent().isMeat();
+    }
+
     @Override
     public void onDeath(DamageSource source) {
         if (this.hasStackEquipped(EquipmentSlot.CHEST)) {
@@ -295,13 +296,9 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
         if (target instanceof CreeperEntity || target instanceof GhastEntity) {
             return false;
         }
-        if (target instanceof QueenCatEntity) {
-            QueenCatEntity queenCatEntity = (QueenCatEntity) target;
-            return !queenCatEntity.isTamed() || queenCatEntity.getOwner() != owner;
-        }
-        if (target instanceof PrincessCatEntity) {
-            PrincessCatEntity princessCatEntity = (PrincessCatEntity) target;
-            return !princessCatEntity.isTamed() || princessCatEntity.getOwner() != owner;
+        if (target instanceof HumanoidDogEntity) {
+            HumanoidDogEntity queenDogEntity = (HumanoidDogEntity) target;
+            return !queenDogEntity.isTamed() || queenDogEntity.getOwner() != owner;
         }
         if (target instanceof PlayerEntity && owner instanceof PlayerEntity
                 && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
@@ -359,26 +356,26 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
     }
 
     /* VARIANTS */
-    private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(QueenCatEntity.class,
+    private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(QueenDogEntity.class,
             TrackedDataHandlerRegistry.INTEGER);
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
             @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        QueenCatVariant variant = Util.getRandom(QueenCatVariant.values(), this.random);
+        HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
         setVariant(variant);
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
-    public QueenCatVariant getVariant() {
-        return QueenCatVariant.byId(this.getTypeVariant() & 255);
+    public HumanoidDogVariant getVariant() {
+        return HumanoidDogVariant.byId(this.getTypeVariant() & 255);
     }
 
     private int getTypeVariant() {
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(QueenCatVariant variant) {
+    protected void setVariant(HumanoidDogVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

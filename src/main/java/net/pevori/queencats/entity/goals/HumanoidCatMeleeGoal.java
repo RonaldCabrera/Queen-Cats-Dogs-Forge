@@ -3,7 +3,6 @@ package net.pevori.queencats.entity.goals;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.pevori.queencats.entity.custom.HumanoidCatEntity;
-import net.pevori.queencats.entity.custom.QueenCatEntity;
 
 public class HumanoidCatMeleeGoal extends Goal {
     private final HumanoidCatEntity entity;

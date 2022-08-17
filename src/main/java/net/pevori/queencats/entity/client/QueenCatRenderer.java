@@ -8,7 +8,6 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.pevori.queencats.QueenCats;
@@ -35,8 +34,8 @@ public class QueenCatRenderer extends GeoEntityRenderer<QueenCatEntity> {
 
     @Override
     public Identifier getTextureLocation(QueenCatEntity instance) {
-        if(instance.getVariant() == QueenCatVariant.BLACK && instance.hasStackEquipped(EquipmentSlot.CHEST)){
-            return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_black_armored.png");
+        if(instance.isMogu()){
+            return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_mogu.png");
         }
 
         return LOCATION_BY_VARIANT.get(instance.getVariant());

@@ -8,7 +8,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.PrincessCatEntity;
+import net.pevori.queencats.entity.custom.PrincessDogEntity;
 import net.pevori.queencats.entity.custom.QueenCatEntity;
+import net.pevori.queencats.entity.custom.QueenDogEntity;
 
 public class ModEntities {
     public static final EntityType<QueenCatEntity> QUEEN_CAT = Registry.register(
@@ -19,5 +21,15 @@ public class ModEntities {
     public static final EntityType<PrincessCatEntity> PRINCESS_CAT = Registry.register(
         Registry.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_cat"),
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessCatEntity::new)
+                .dimensions(EntityDimensions.fixed(0.5f, 1.5f)).build());
+
+    public static final EntityType<QueenDogEntity> QUEEN_DOG = Registry.register(
+        Registry.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_dog"),
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenDogEntity::new)
+                .dimensions(EntityDimensions.fixed(0.8f, 2.0f)).build());
+
+    public static final EntityType<PrincessDogEntity> PRINCESS_DOG = Registry.register(
+        Registry.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_dog"),
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessDogEntity::new)
                 .dimensions(EntityDimensions.fixed(0.5f, 1.5f)).build());
 }

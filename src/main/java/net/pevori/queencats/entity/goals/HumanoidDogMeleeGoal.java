@@ -2,14 +2,14 @@ package net.pevori.queencats.entity.goals;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.pevori.queencats.entity.custom.QueenCatEntity;
+import net.pevori.queencats.entity.custom.HumanoidDogEntity;
 
-public class QueenCatMeleeGoal extends Goal {
-    private final QueenCatEntity entity;
+public class HumanoidDogMeleeGoal extends Goal {
+    private final HumanoidDogEntity entity;
     public int attackTime;
     private double moveSpeedAmp = 1;
 
-	public QueenCatMeleeGoal(QueenCatEntity entity, double speed) {
+	public HumanoidDogMeleeGoal(HumanoidDogEntity entity, double speed) {
 		this.entity = entity;
 		this.moveSpeedAmp = speed;
 	}

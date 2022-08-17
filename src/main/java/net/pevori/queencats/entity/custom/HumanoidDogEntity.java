@@ -10,13 +10,13 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
-public class HumanoidCatEntity extends TameableEntity{
-    public static final String okayuSan = "okayu";
-	public static final TrackedData<Boolean> ATTACK_STATE = DataTracker.registerData(HumanoidCatEntity.class,
-			TrackedDataHandlerRegistry.BOOLEAN);
-    
-    protected HumanoidCatEntity(EntityType<? extends TameableEntity> entityType, World world) {
-        super(entityType, world);
+public class HumanoidDogEntity extends TameableEntity{
+    public static final String koroSan = "korone";
+    public static final TrackedData<Boolean> ATTACK_STATE = DataTracker.registerData(HumanoidDogEntity.class,
+    TrackedDataHandlerRegistry.BOOLEAN);
+
+    protected HumanoidDogEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    super(entityType, world);
     }
 
     @Override
@@ -25,15 +25,15 @@ public class HumanoidCatEntity extends TameableEntity{
     }
 
     public boolean getAttackingState() {
-		return this.dataTracker.get(ATTACK_STATE);
-	}
+        return this.dataTracker.get(ATTACK_STATE);
+    }
 
-	public void setAttackingState(Boolean attacking) {
-		this.dataTracker.set(ATTACK_STATE, attacking);
-	}
-    
-    public boolean isMogu(){
+    public void setAttackingState(Boolean attacking) {
+        this.dataTracker.set(ATTACK_STATE, attacking);
+    }
+
+    public boolean isDoog(){
         String s = Formatting.strip(this.getName().getString());
-        return (s != null && s.toLowerCase().contains(okayuSan));
+        return (s != null && s.toLowerCase().contains(koroSan));
     }
 }
