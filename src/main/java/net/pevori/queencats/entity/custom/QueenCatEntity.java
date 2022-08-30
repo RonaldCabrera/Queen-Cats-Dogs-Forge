@@ -91,8 +91,7 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        //this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.add(2, new HumanoidCatMeleeGoal(this, 1.0D));
+        this.goalSelector.add(2, new HumanoidCatMeleeGoal(this, 1.25D));
         this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
         this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_FISH), false));

@@ -45,11 +45,11 @@ public class HumanoidCatMeleeGoal extends Goal {
 					livingentity.getZ());
 			double d1 = this.getAttackReachSqr(livingentity);
 			if (inLineOfSight) {
-				if (this.entity.distanceTo(livingentity) >= 4.0D) {
+				if (this.entity.distanceTo(livingentity) >= 3.0D) {
 					this.entity.getNavigation().startMovingTo(livingentity, this.moveSpeedAmp);
 					this.attackTime = -5;
 				} else {
-					if (this.attackTime == 4) {
+					if (this.attackTime == 2) {
 						this.entity.getNavigation().startMovingTo(livingentity, this.moveSpeedAmp);
 						if (d0 <= d1) {
 							this.entity.tryAttack(livingentity);

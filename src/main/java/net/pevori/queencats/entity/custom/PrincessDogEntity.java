@@ -77,7 +77,7 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable{
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        this.goalSelector.add(2, new HumanoidDogMeleeGoal(this, 1.0D));
+        this.goalSelector.add(2, new HumanoidDogMeleeGoal(this, 1.25D));
         this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_FISH), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
@@ -125,23 +125,28 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable{
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.HUMANOID_CAT_AMBIENT;
+        return ModSounds.HUMANOID_DOG_AMBIENT;
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
-        return ModSounds.HUMANOID_CAT_EAT;
+        return ModSounds.HUMANOID_DOG_EAT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_CAT_HURT;
+        return ModSounds.HUMANOID_DOG_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_CAT_DEATH;
+        return ModSounds.HUMANOID_DOG_DEATH;
     }
+
+    /*@Override
+    protected SoundEvent getAttackSound(){
+        return ModSounds.HUMANOID_DOG_ANGRY;
+    }*/
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
@@ -202,7 +207,7 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT, 1.0f, 1.0f);
+                    this.playSound(ModSounds.HUMANOID_DOG_EAT, 1.0f, 1.0f);
                 }
 
                 return ActionResult.SUCCESS;
