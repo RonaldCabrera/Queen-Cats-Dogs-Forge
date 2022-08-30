@@ -1,3 +1,4 @@
+![Queen Cats Logo](src/main/resources/assets/queencats/icon.png)
 # Queen Cats & Dogs
 
 ## Setup
