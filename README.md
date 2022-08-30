@@ -1,4 +1,4 @@
-# Fabric Example Mod
+# Queen Cats & Dogs
 
 ## Setup
 
