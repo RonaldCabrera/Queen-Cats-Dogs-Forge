@@ -1,0 +1,123 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.humanoiddog.idle": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"tail": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*150)*25", 0]
+					}
+				},
+				"head": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time*75)*0.10", 0]
+					}
+				},
+				"rightChest": {
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*150)*-5"]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*150)*5"]
+					}
+				}
+			}
+		},
+		"animation.humanoiddog.walk": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"leftLeg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*450)*-25", 0, 0]
+					}
+				},
+				"rightLeg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*450)*25", 0, 0]
+					}
+				},
+				"tail": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*300)*25", 0]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*450)*25", 0, 0]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*450)*-25", 0, 0]
+					}
+				}
+			}
+		},
+		"animation.humanoiddog.sitting": {
+			"loop": true,
+			"animation_length": 16.58333,
+			"bones": {
+				"rightLeg": {
+					"rotation": {
+						"vector": ["-87 - this", "8 - this", "-this"]
+					}
+				},
+				"leftLeg": {
+					"rotation": {
+						"vector": ["-87 - this", "-8 - this", "-this"]
+					}
+				},
+				"all": {
+					"position": {
+						"vector": [0, -7, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"body": {
+					"rotation": {
+						"vector": [1, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.humanoiddog.attack": {
+			"loop": true,
+			"animation_length": 0.45833,
+			"bones": {
+				"rightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*400)*-100", "math.sin(query.anim_time*400)*-10", 0]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*400)*-100", "math.sin(query.anim_time*400)*10", 0]
+					}
+				},
+				"armorRightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*400)*-100.0421", "math.sin(query.anim_time*400)*-27.9837", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

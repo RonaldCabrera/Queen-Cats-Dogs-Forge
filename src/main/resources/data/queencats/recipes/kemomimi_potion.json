@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#Q#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:glass_bottle"
+        },
+        "Q": {
+            "item": "queencats:golden_fish"
+        }
+    },
+    "result": {
+        "item": "queencats:kemomimi_potion",
+        "count": 4
+    }
+}

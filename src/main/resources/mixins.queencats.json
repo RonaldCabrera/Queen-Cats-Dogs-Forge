@@ -1,0 +1,8 @@
+{
+  "compatibilityLevel": "JAVA_17",
+  "package": "net.pevori.queencats.mixin",
+  "refmap": "mixins.queencats.refmap.json",
+  "mixins": [],
+  "client": ["QueenCatMixin", "QueenDogMixin"],
+  "server": []
+}

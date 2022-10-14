@@ -1,0 +1,63 @@
+{
+    "humanoid_cat_ambient":{
+        "subtitle": "queencats.humanoid_cat_ambient",
+        "sounds": [
+            "queencats:humanoid_cat_ambient_1",
+            "queencats:humanoid_cat_ambient_2"
+        ]
+    },
+    "humanoid_cat_eat":{
+        "subtitle": "queencats.humanoid_cat_eat",
+        "sounds": [
+            "queencats:humanoid_cat_eat"
+        ]
+    },
+    "humanoid_cat_hurt":{
+        "subtitle": "queencats.humanoid_cat_hurt",
+        "sounds": [
+            "queencats:humanoid_cat_hurt"
+        ]
+    },
+    "humanoid_cat_death":{
+        "subtitle": "queencats.humanoid_cat_death",
+        "sounds": [
+            "queencats:humanoid_cat_death"
+        ]
+    },
+
+    
+    "humanoid_dog_ambient":{
+        "subtitle": "queencats.humanoid_dog_ambient",
+        "sounds": [
+            "queencats:humanoid_dog_ambient_1",
+            "queencats:humanoid_dog_ambient_2"
+        ]
+    },
+    "humanoid_dog_angry":{
+        "subtitle": "queencats.humanoid_dog_angry",
+        "sounds": [
+            "queencats:humanoid_dog_angry_1",
+            "queencats:humanoid_dog_angry_2",
+            "queencats:humanoid_dog_angry_3"
+        ]
+    },
+    "humanoid_dog_eat":{
+        "subtitle": "queencats.humanoid_dog_eat",
+        "sounds": [
+            "queencats:humanoid_dog_eat"
+        ]
+    },
+    "humanoid_dog_hurt":{
+        "subtitle": "queencats.humanoid_dog_hurt",
+        "sounds": [
+            "queencats:humanoid_dog_hurt_1",
+            "queencats:humanoid_dog_hurt_2"
+        ]
+    },
+    "humanoid_dog_death":{
+        "subtitle": "queencats.humanoid_dog_death",
+        "sounds": [
+            "queencats:humanoid_dog_death"
+        ]
+    }
+}
