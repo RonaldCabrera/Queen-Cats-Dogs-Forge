@@ -5,7 +5,7 @@
 
 ## Requirements
 
-For this mod to work, both [Geckolib](https://www.curseforge.com/minecraft/mc-mods/geckolib) and [Forge ModLoader](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.18.2.html) are required.
+For this mod to work, both [Geckolib](https://www.curseforge.com/minecraft/mc-mods/geckolib) and [Forge ModLoader](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.19.2.html) are required.
 
 ## License
 
