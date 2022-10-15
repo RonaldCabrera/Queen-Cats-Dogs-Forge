@@ -1,10 +1,8 @@
 package net.pevori.queencats.entity.client;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.PrincessCatEntity;
-import net.pevori.queencats.entity.custom.QueenCatEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -12,17 +10,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class PrincessCatModel extends AnimatedGeoModel<PrincessCatEntity> {
     @Override
-    public ResourceLocation getModelLocation(PrincessCatEntity object) {
+    public ResourceLocation getModelResource(PrincessCatEntity object) {
         return new ResourceLocation(QueenCats.MOD_ID, "geo/humanoid_cat_children.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PrincessCatEntity object) {
+    public ResourceLocation getTextureResource(PrincessCatEntity object) {
         return QueenCatRenderer.LOCATION_BY_VARIANT.get(object.getVariant());
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(PrincessCatEntity animatable) {
+    public ResourceLocation getAnimationResource(PrincessCatEntity animatable) {
         return new ResourceLocation(QueenCats.MOD_ID, "animations/humanoid_cat.animation.json");
     }
 

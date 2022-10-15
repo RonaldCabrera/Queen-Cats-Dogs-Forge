@@ -15,7 +15,7 @@ import net.pevori.queencats.entity.custom.QueenDogEntity;
 
 public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-            DeferredRegister.create(ForgeRegistries.ENTITIES, QueenCats.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, QueenCats.MOD_ID);
 
     public static final RegistryObject<EntityType<QueenCatEntity>> QUEEN_CAT = ENTITY_TYPES.register("queen_cat",
             () -> EntityType.Builder.of(QueenCatEntity::new, MobCategory.CREATURE)

@@ -11,7 +11,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class QueenCatModel extends AnimatedGeoModel<QueenCatEntity> {
     @Override
-    public ResourceLocation getModelLocation(QueenCatEntity object) {
+    public ResourceLocation getModelResource(QueenCatEntity object) {
         if(object.hasItemInSlot(EquipmentSlot.CHEST)){
             return new ResourceLocation(QueenCats.MOD_ID, "geo/humanoid_cat_armor.geo.json");
         }
@@ -20,12 +20,12 @@ public class QueenCatModel extends AnimatedGeoModel<QueenCatEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(QueenCatEntity object) {
+    public ResourceLocation getTextureResource(QueenCatEntity object) {
         return QueenCatRenderer.LOCATION_BY_VARIANT.get(object.getVariant());
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(QueenCatEntity animatable) {
+    public ResourceLocation getAnimationResource(QueenCatEntity animatable) {
         return new ResourceLocation(QueenCats.MOD_ID, "animations/humanoid_cat.animation.json");
     }
 
