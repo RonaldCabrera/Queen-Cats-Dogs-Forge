@@ -8,19 +8,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.PrincessCatEntity;
-import net.pevori.queencats.entity.variant.PrincessCatVariant;
+import net.pevori.queencats.entity.variant.HumanoidCatVariant;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class PrincessCatRenderer extends GeoEntityRenderer<PrincessCatEntity> {
-    public static final Map<PrincessCatVariant, Identifier> LOCATION_BY_VARIANT =
-    Util.make(Maps.newEnumMap(PrincessCatVariant.class), (map) -> {
-        map.put(PrincessCatVariant.WHITE,
+    public static final Map<HumanoidCatVariant, Identifier> LOCATION_BY_VARIANT =
+    Util.make(Maps.newEnumMap(HumanoidCatVariant.class), (map) -> {
+        map.put(HumanoidCatVariant.WHITE,
                 new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_white.png"));
-        map.put(PrincessCatVariant.BLACK,
+        map.put(HumanoidCatVariant.BLACK,
                 new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_black.png"));
-        map.put(PrincessCatVariant.CALICO,
+        map.put(HumanoidCatVariant.CALICO,
                 new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_calico.png"));
-        map.put(PrincessCatVariant.CALLAS,
+        map.put(HumanoidCatVariant.CALLAS,
                 new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cat/humanoid_cat_callas.png"));
     });
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "queen-cats",
-  "version": "1.0.0",
+  "version": "${version}",
 
   "name": "Queen Cats",
   "description": "This is an unofficial port of the Minecraft Bedrock Addon known as Queen Cats!",

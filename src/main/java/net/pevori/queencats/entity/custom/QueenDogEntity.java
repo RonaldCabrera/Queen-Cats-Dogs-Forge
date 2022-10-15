@@ -17,7 +17,7 @@ import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,12 +40,13 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.ModEntities;
-import net.pevori.queencats.entity.goals.HumanoidDogMeleeGoal;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 
 import org.jetbrains.annotations.Nullable;
+
+import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -92,7 +93,7 @@ public class QueenDogEntity extends HumanoidDogEntity implements IAnimatable {
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        this.goalSelector.add(2, new HumanoidDogMeleeGoal(this, 1.25D));
+        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
         this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
         this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_FISH), false));
@@ -117,13 +118,17 @@ public class QueenDogEntity extends HumanoidDogEntity implements IAnimatable {
             return PlayState.CONTINUE;
         }
 
-        if (this.getAttackingState()) {
-            event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", true));
-            return PlayState.CONTINUE;
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", true));
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends IAnimatable> PlayState attackPredicate(AnimationEvent<E> event) {
+        if(this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)){
+            event.getController().markNeedsReload();
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", false));
+            this.handSwinging = false;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", true));
         return PlayState.CONTINUE;
     }
 
@@ -131,6 +136,8 @@ public class QueenDogEntity extends HumanoidDogEntity implements IAnimatable {
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "controller",
                 0, this::predicate));
+        animationData.addAnimationController(new AnimationController(this, "controller",
+                0, this::attackPredicate));
     }
 
     @Override
@@ -304,7 +311,7 @@ public class QueenDogEntity extends HumanoidDogEntity implements IAnimatable {
                 && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
             return false;
         }
-        if (target instanceof HorseBaseEntity && ((HorseBaseEntity) target).isTame()) {
+        if (target instanceof HorseEntity && ((HorseEntity) target).isTame()) {
             return false;
         }
         return !(target instanceof TameableEntity) || !((TameableEntity) target).isTamed();
@@ -351,7 +358,6 @@ public class QueenDogEntity extends HumanoidDogEntity implements IAnimatable {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(SITTING, false);
-        this.dataTracker.startTracking(ATTACK_STATE, false);
         this.dataTracker.startTracking(DATA_ID_TYPE_VARIANT, 0);
     }
 

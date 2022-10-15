@@ -12,8 +12,6 @@ import net.minecraft.world.World;
 
 public class HumanoidCatEntity extends TameableEntity{
     public static final String okayuSan = "okayu";
-	public static final TrackedData<Boolean> ATTACK_STATE = DataTracker.registerData(HumanoidCatEntity.class,
-			TrackedDataHandlerRegistry.BOOLEAN);
     
     protected HumanoidCatEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
@@ -23,14 +21,6 @@ public class HumanoidCatEntity extends TameableEntity{
     public PassiveEntity createChild(ServerWorld var1, PassiveEntity var2) {
         return null;
     }
-
-    public boolean getAttackingState() {
-		return this.dataTracker.get(ATTACK_STATE);
-	}
-
-	public void setAttackingState(Boolean attacking) {
-		this.dataTracker.set(ATTACK_STATE, attacking);
-	}
     
     public boolean isMogu(){
         String s = Formatting.strip(this.getName().getString());
