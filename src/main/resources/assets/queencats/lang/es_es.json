@@ -1,0 +1,29 @@
+{
+    "itemGroup.queencats.queencats": "Queen Cats",
+
+    "item.queencats.golden_fish": "Pez Dorado",
+    "item.queencats.golden_bone": "Hueso Dorado",
+    "item.queencats.kemomimi_potion": "Poción Kemomimi",
+    "item.queencats.glinted_item_tooltip": "Desbordado con la Energia §l§bKemomimi§r",
+
+    "item.queencats.queen_cat_spawn_egg": "Generador de Queen Cat",
+    "item.queencats.princess_cat_spawn_egg": "Generador de Princess Cat",
+    "item.queencats.queen_dog_spawn_egg": "Generador de Queen Dog",
+    "item.queencats.princess_dog_spawn_egg": "Generador de Princess Dog",
+
+    "entity.queencats.queen_cat": "Queen Cat",
+    "entity.queencats.princess_cat": "Princess Cat",
+
+    "entity.queencats.queen_dog": "Queen Dog",
+    "entity.queencats.princess_dog": "Princess Dog",
+
+    "queencats.humanoid_cat_ambient": "Maullidos de Gato Humanoide",
+    "queencats.humanoid_cat_eat": "Gato Humanoide Comiendo",
+    "queencats.humanoid_cat_hurt": "Gato Humanoide Lastimado",
+    "queencats.humanoid_cat_death": "Gato Humanoide Muriendo",
+
+    "queencats.humanoid_dog_ambient": "Ladridos de Perro Humanoide",
+    "queencats.humanoid_dog_eat": "Perro Humanoide Comiendo",
+    "queencats.humanoid_dog_hurt": "Perro Humanoide Lastimado",
+    "queencats.humanoid_dog_death": "Perro Humanoide Muriendo"
+}
