@@ -4,5 +4,5 @@
   "refmap": "mixins.queencats.refmap.json",
   "mixins": [],
   "client": ["QueenCatMixin", "QueenDogMixin"],
-  "server": []
+  "server": ["QueenCatMixin", "QueenDogMixin"]
 }
