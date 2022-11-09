@@ -204,7 +204,7 @@ public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
             this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
             return InteractionResult.CONSUME;
         } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlot(EquipmentSlot.CHEST, itemstack.copy());
+            this.setItemSlotAndDropWhenKilled(EquipmentSlot.CHEST, itemstack.copy());
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
