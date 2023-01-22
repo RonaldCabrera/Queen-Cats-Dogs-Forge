@@ -44,14 +44,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable {
-    private AnimationFactory factory = new AnimationFactory(this);
-    private static final EntityDataAccessor<Boolean> SITTING =
-            SynchedEntityData.defineId(PrincessDogEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
-            SynchedEntityData.defineId(PrincessDogEntity.class, EntityDataSerializers.INT);
-
+public class PrincessDogEntity extends HumanoidDogEntity{
     public PrincessDogEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
@@ -70,7 +63,7 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable 
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_BONE.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -78,81 +71,7 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable 
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.walk", true));
-            return PlayState.CONTINUE;
-        }
-
-        if (this.isSitting()) {
-            event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.sitting", true));
-            return PlayState.CONTINUE;
-        }
-
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", true));
-        return PlayState.CONTINUE;
-    }
-
-    private PlayState attackPredicate(AnimationEvent event){
-        if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)){
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", false));
-            this.swinging = false;
-        }
-
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
-                0, this::predicate));
-        data.addAnimationController(new AnimationController(this, "attackController",
-                0, this::attackPredicate));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-        if(this.isAggressive()){
-            return ModSounds.HUMANOID_DOG_ANGRY.get();
-        }
-
-        return ModSounds.HUMANOID_DOG_AMBIENT.get();
-    }
-
-    @Override
-    public SoundEvent getEatingSound(ItemStack stack) {
-        return ModSounds.HUMANOID_DOG_EAT.get();
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_DOG_HURT.get();
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_DOG_DEATH.get();
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.WOLF_STEP, 0.15f, 1.0f);
-    }
-
     /* Tamable Entity */
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob){
-        return null;
-    }
-
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
@@ -242,53 +161,6 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable 
         return super.mobInteract(player, hand);
     }
 
-    @Override
-    public boolean wantsToAttack(LivingEntity entity, LivingEntity owner) {
-        if (!(entity instanceof Creeper) && !(entity instanceof Ghast)) {
-            if (entity instanceof HumanoidCatEntity) {
-                HumanoidCatEntity humanoid = (HumanoidCatEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof HumanoidDogEntity) {
-                HumanoidDogEntity humanoid = (HumanoidDogEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof Player && owner instanceof Player && !((Player)owner).canHarmPlayer((Player)entity)) {
-                return false;
-            } else if (entity instanceof AbstractHorse && ((AbstractHorse)entity).isTamed()) {
-                return false;
-            } else {
-                return !(entity instanceof TamableAnimal) || !((TamableAnimal)entity).isTame();
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        setSitting(tag.getBoolean("isSitting"));
-        this.entityData.set(DATA_ID_TYPE_VARIANT, tag.getInt("Variant"));
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.putBoolean("isSitting", this.isSitting());
-        tag.putInt("Variant", this.getTypeVariant());
-    }
-
-    @Override
-    protected void defineSynchedData(){
-        super.defineSynchedData();
-        this.entityData.define(SITTING, false);
-        this.entityData.define(DATA_ID_TYPE_VARIANT, 0);
-    }
-
-    public boolean isMeat(ItemStack pStack) {
-        Item item = pStack.getItem();
-        return item.isEdible() && pStack.getFoodProperties(this).isMeat();
-    }
-
     public void startGrowth() {
         HumanoidDogVariant variant = this.getVariant();
         QueenDogEntity queenDogEntity = ModEntityTypes.QUEEN_DOG.get().create(this.level);
@@ -309,25 +181,6 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable 
 
         this.level.addFreshEntity(queenDogEntity);
         this.discard();
-    }
-
-    public void setSitting(boolean sitting){
-        this.entityData.set(SITTING, sitting);
-        this.setOrderedToSit(sitting);
-    }
-
-    public boolean isSitting() {
-        return this.entityData.get(SITTING);
-    }
-
-    @Override
-    public Team getTeam() {
-        return super.getTeam();
-    }
-
-    @Override
-    public boolean canBeLeashed(Player pPlayer) {
-        return false;
     }
 
     @Override
@@ -352,17 +205,5 @@ public class PrincessDogEntity extends HumanoidDogEntity implements IAnimatable 
         HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
         setVariant(variant);
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
-    }
-
-    public HumanoidDogVariant getVariant() {
-        return HumanoidDogVariant.byId(this.getTypeVariant() & 255);
-    }
-
-    private int getTypeVariant() {
-        return this.entityData.get(DATA_ID_TYPE_VARIANT);
-    }
-
-    protected void setVariant(HumanoidDogVariant variant) {
-        this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

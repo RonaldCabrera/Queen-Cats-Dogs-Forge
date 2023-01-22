@@ -20,6 +20,9 @@ public class ModItems {
     public static final RegistryObject<Item> GOLDEN_BONE = ITEMS.register("golden_bone",
             () -> new GlintedItem(new GlintedItem.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
 
+    public static final RegistryObject<Item> GOLDEN_WHEAT = ITEMS.register("golden_wheat",
+            () -> new GlintedItem(new GlintedItem.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
+
     public static final RegistryObject<Item> KEMOMIMI_POTION = ITEMS.register("kemomimi_potion",
             () -> new GlintedItem(new GlintedItem.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
 
@@ -37,6 +40,14 @@ public class ModItems {
 
     public static final RegistryObject<Item> PRINCESS_DOG_SPAWN_EGG = ITEMS.register("princess_dog_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntityTypes.PRINCESS_DOG,0xF3F7FA, 0x844204,
+                    new Item.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
+
+    public static final RegistryObject<Item> QUEEN_BUNNY_SPAWN_EGG = ITEMS.register("queen_bunny_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.QUEEN_BUNNY,0xF3F7FA, 0xA020F0,
+                    new Item.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
+
+    public static final RegistryObject<Item> PRINCESS_BUNNY_SPAWN_EGG = ITEMS.register("princess_bunny_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.PRINCESS_BUNNY,0xF3F7FA, 0xDB68ED,
                     new Item.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
 
     public static void register(IEventBus eventBus){

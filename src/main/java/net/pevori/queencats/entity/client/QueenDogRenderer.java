@@ -26,6 +26,9 @@ public class QueenDogRenderer extends GeoEntityRenderer<QueenDogEntity> {
                         new ResourceLocation(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_shiro.png"));
                 map.put(HumanoidDogVariant.CREAM,
                         new ResourceLocation(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_cream.png"));
+                map.put(HumanoidDogVariant.GRAY,
+                        new ResourceLocation(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_gray.png"));
+
             });
 
     public QueenDogRenderer(EntityRendererProvider.Context ctx) {

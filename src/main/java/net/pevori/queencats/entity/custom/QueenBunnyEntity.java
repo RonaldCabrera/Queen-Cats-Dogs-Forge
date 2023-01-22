@@ -1,6 +1,7 @@
 package net.pevori.queencats.entity.custom;
 
 import net.minecraft.Util;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -16,23 +17,21 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.pevori.queencats.entity.ModEntityTypes;
-import net.pevori.queencats.entity.variants.HumanoidCatVariant;
+import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
-import net.pevori.queencats.sound.ModSounds;
 
 import javax.annotation.Nullable;
 
-public class PrincessCatEntity  extends HumanoidCatEntity{
-    public PrincessCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+public class QueenBunnyEntity extends HumanoidBunnyEntity{
+    public QueenBunnyEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
 
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 4.0f)
-                .add(Attributes.ATTACK_SPEED, 1.0f)
+                .add(Attributes.ATTACK_DAMAGE, 8.0f)
+                .add(Attributes.ATTACK_SPEED, 2.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
     }
 
@@ -41,8 +40,9 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_WHEAT.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -52,34 +52,29 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item item = itemstack.getItem();
+        ItemStack itemStack = player.getItemInHand(hand);
+        Item item = itemStack.getItem();
 
-        if (item == itemForGrowth && isTame() && this.isOwnedBy(player)) {
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            startGrowth();
-            return InteractionResult.CONSUME;
+        if (isFood(itemStack)) {
+            return super.mobInteract(player, hand);
         }
 
         if (item instanceof DyeItem && this.isOwnedBy(player)) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
-            if (dyeColor == DyeColor.BLACK) {
-                this.setVariant(HumanoidCatVariant.BLACK);
+            if (dyeColor == DyeColor.LIGHT_GRAY) {
+                this.setVariant(HumanoidBunnyVariant.COCOA);
             } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(HumanoidCatVariant.WHITE);
-            } else if (dyeColor == DyeColor.ORANGE) {
-                this.setVariant(HumanoidCatVariant.CALICO);
-            } else if (dyeColor == DyeColor.GRAY) {
-                this.setVariant(HumanoidCatVariant.CALLAS);
+                this.setVariant(HumanoidBunnyVariant.SNOW);
+            } else if (dyeColor == DyeColor.YELLOW) {
+                this.setVariant(HumanoidBunnyVariant.SUNDAY);
+            } else if (dyeColor == DyeColor.PINK) {
+                this.setVariant(HumanoidBunnyVariant.STRAWBERRY);
             }
 
             if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
+                itemStack.shrink(1);
             }
 
-            //this.setPersistent();
             this.setPersistenceRequired();
             return InteractionResult.CONSUME;
         }
@@ -91,20 +86,20 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
             }
             this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
             return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlot(EquipmentSlot.CHEST, itemstack.copy());
+        } else if (equippableArmor.test(itemStack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
+            this.setItemSlotAndDropWhenKilled(EquipmentSlot.CHEST, itemStack.copy());
             if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
+                itemStack.shrink(1);
             }
             return InteractionResult.SUCCESS;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemStack)) && isTame() && this.getHealth() < getMaxHealth()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
+                    itemStack.shrink(1);
                 }
 
                 if (!this.level.isClientSide()) {
@@ -114,7 +109,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -126,11 +121,11 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
+                    itemStack.shrink(1);
                 }
 
                 if (!this.level.isClientSide()) {
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
@@ -148,44 +143,19 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
+        if (itemStack.getItem() == itemForTaming) {
             return InteractionResult.PASS;
         }
 
         return super.mobInteract(player, hand);
     }
 
-
-
-    public void startGrowth() {
-        HumanoidCatVariant variant = this.getVariant();
-        QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(this.level);
-
-        queenCatEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
-        queenCatEntity.setNoAi(this.isNoAi());
-        queenCatEntity.setVariant(variant);
-
-        if (this.hasCustomName()) {
-            queenCatEntity.setCustomName(this.getCustomName());
-            queenCatEntity.setCustomNameVisible(this.isCustomNameVisible());
-        }
-
-        queenCatEntity.setPersistenceRequired();
-        queenCatEntity.setOwnerUUID(this.getOwnerUUID());
-        queenCatEntity.setTame(true);
-        queenCatEntity.setSitting(this.isSitting());
-
-        this.level.addFreshEntity(queenCatEntity);
-        this.discard();
-    }
-
-
     @Override
     public void setTame(boolean tamed) {
         super.setTame(tamed);
         if(tamed){
-            getAttribute(Attributes.MAX_HEALTH).setBaseValue(40.0D);
-            getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.5D);
+            getAttribute(Attributes.MAX_HEALTH).setBaseValue(60.0D);
+            getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
             getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((double) 0.3f);
         }
         else{
@@ -195,11 +165,10 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         }
     }
 
-    /* VARIANTS */
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_146746_, DifficultyInstance p_146747_,
-                                        MobSpawnType p_146748_, @Nullable SpawnGroupData p_146749_,
+                                        MobSpawnType p_146748_, @javax.annotation.Nullable SpawnGroupData p_146749_,
                                         @Nullable CompoundTag p_146750_) {
-        HumanoidCatVariant variant = Util.getRandom(HumanoidCatVariant.values(), this.random);
+        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
         setVariant(variant);
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
     }

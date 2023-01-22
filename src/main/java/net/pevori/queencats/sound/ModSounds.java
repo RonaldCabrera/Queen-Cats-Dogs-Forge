@@ -26,6 +26,11 @@ public class ModSounds {
     public static RegistryObject<SoundEvent> HUMANOID_DOG_ANGRY = registerSoundEvent("humanoid_dog_angry");
     public static RegistryObject<SoundEvent> HUMANOID_DOG_DEATH = registerSoundEvent("humanoid_dog_death");
 
+    public static RegistryObject<SoundEvent> HUMANOID_BUNNY_AMBIENT = registerSoundEvent("humanoid_bunny_ambient");
+    public static RegistryObject<SoundEvent> HUMANOID_BUNNY_EAT = registerSoundEvent("humanoid_bunny_eat");
+    public static RegistryObject<SoundEvent> HUMANOID_BUNNY_HURT = registerSoundEvent("humanoid_bunny_hurt");
+    public static RegistryObject<SoundEvent> HUMANOID_BUNNY_DEATH = registerSoundEvent("humanoid_bunny_death");
+
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(QueenCats.MOD_ID, name);

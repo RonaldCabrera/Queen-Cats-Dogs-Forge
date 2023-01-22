@@ -24,7 +24,6 @@
             "queencats:humanoid_cat_death"
         ]
     },
-
     
     "humanoid_dog_ambient":{
         "subtitle": "queencats.humanoid_dog_ambient",
@@ -58,6 +57,32 @@
         "subtitle": "queencats.humanoid_dog_death",
         "sounds": [
             "queencats:humanoid_dog_death"
+        ]
+    },
+
+    "humanoid_bunny_ambient":{
+        "subtitle": "queencats.humanoid_bunny_ambient",
+        "sounds": [
+            "queencats:humanoid_bunny_ambient",
+            "queencats:humanoid_bunny_ambient_2"
+        ]
+    },
+    "humanoid_bunny_eat":{
+        "subtitle": "queencats.humanoid_bunny_eat",
+        "sounds": [
+            "queencats:humanoid_bunny_eat"
+        ]
+    },
+    "humanoid_bunny_hurt":{
+        "subtitle": "queencats.humanoid_bunny_hurt",
+        "sounds": [
+            "queencats:humanoid_bunny_hurt"
+        ]
+    },
+    "humanoid_bunny_death":{
+        "subtitle": "queencats.humanoid_bunny_death",
+        "sounds": [
+            "queencats:humanoid_bunny_death"
         ]
     }
 }

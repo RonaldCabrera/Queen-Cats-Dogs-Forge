@@ -27,7 +27,7 @@ public class QueenCatMixin {
          * This is the logic to generate a new Queen Cat, pretty much the same as
          * a pig getting hit by lightning.
          */
-        if(thisCat.isTame() && thisCat.isOwnedBy(player) && usedItem == ModItems.GOLDEN_FISH.get()){
+        if(thisCat.isTame() && thisCat.isOwnedBy(player) && usedItem == ModItems.KEMOMIMI_POTION.get()){
             if (!player.getAbilities().instabuild) {
                 player.getItemInHand(hand).shrink(1);
             }

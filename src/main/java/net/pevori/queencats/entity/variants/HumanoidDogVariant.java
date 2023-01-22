@@ -6,7 +6,8 @@ import java.util.Comparator;
 public enum HumanoidDogVariant {
     SHIRO(0),
     HUSKY(1),
-    CREAM(2);
+    CREAM(2),
+    GRAY(3);
 
     private static final HumanoidDogVariant[] BY_ID = Arrays.stream(values()).sorted(Comparator.
             comparingInt(HumanoidDogVariant::getId)).toArray(HumanoidDogVariant[]::new);

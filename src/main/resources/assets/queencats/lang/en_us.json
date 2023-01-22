@@ -3,6 +3,7 @@
 
   "item.queencats.golden_fish": "Golden Fish",
   "item.queencats.golden_bone": "Golden Bone",
+  "item.queencats.golden_wheat": "Golden Wheat",
   "item.queencats.kemomimi_potion": "Kemomimi Potion",
   "tooltip.queencats.glinted_item_tooltip": "Overflows with §l§bKemomimi§r energy",
 
@@ -10,6 +11,8 @@
   "item.queencats.princess_cat_spawn_egg": "Princess Cat Spawn Egg",
   "item.queencats.queen_dog_spawn_egg": "Queen Dog Spawn Egg",
   "item.queencats.princess_dog_spawn_egg": "Princess Dog Spawn Egg",
+  "item.queencats.queen_bunny_spawn_egg": "Queen Bunny Spawn Egg",
+  "item.queencats.princess_bunny_spawn_egg": "Princess Bunny Spawn Egg",
 
   "entity.queencats.queen_cat": "Queen Cat",
   "entity.queencats.princess_cat": "Princess Cat",
@@ -25,5 +28,10 @@
   "queencats.humanoid_dog_ambient": "Humanoid Dog Barks",
   "queencats.humanoid_dog_eat": "Humanoid Dog Eats",
   "queencats.humanoid_dog_hurt": "Humanoid Dog Hurts",
-  "queencats.humanoid_dog_death": "Humanoid Dog Dies"
+  "queencats.humanoid_dog_death": "Humanoid Dog Dies",
+
+  "queencats.humanoid_bunny_ambient": "Humanoid Bunny Honks",
+  "queencats.humanoid_bunny_eat": "Humanoid Bunny Eats",
+  "queencats.humanoid_bunny_hurt": "Humanoid Bunny Hurts",
+  "queencats.humanoid_bunny_death": "Humanoid Bunny Dies"
 }

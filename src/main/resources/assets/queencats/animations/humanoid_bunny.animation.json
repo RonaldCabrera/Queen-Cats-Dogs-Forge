@@ -1,0 +1,105 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.humanoidbunny.idle": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"tail": {
+					"rotation": ["math.sin(query.anim_time*150)*10", 0, 0]
+				},
+				"head": {
+					"position": [0, "math.sin(query.anim_time*75)*0.10", 0]
+				},
+				"rightChest": {
+					"position": [0, 0, 0]
+				},
+				"rightArm": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*-5"]
+				},
+				"leftArm": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*5"]
+				},
+				"ear1": {
+					"position": [0, "math.sin(query.anim_time*75)*0.10", 0]
+				},
+				"ear2": {
+					"position": [0, "math.sin(query.anim_time*75)*0.10", 0]
+				}
+			}
+		},
+		"animation.humanoidbunny.walk": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"leftLeg": {
+					"rotation": ["math.sin(query.anim_time*450)*-25", 0, 0]
+				},
+				"rightLeg": {
+					"rotation": ["math.sin(query.anim_time*450)*25", 0, 0]
+				},
+				"tail": {
+					"rotation": [0, "math.sin(query.anim_time*300)*25", 0]
+				},
+				"rightArm": {
+					"rotation": ["math.sin(query.anim_time*450)*25", 0, 0]
+				},
+				"leftArm": {
+					"rotation": ["math.sin(query.anim_time*450)*-25", 0, 0]
+				},
+				"leftLeg_skart": {
+					"relative_to": {
+						"rotation": "entity"
+					}
+				}
+			}
+		},
+		"animation.humanoidbunny.sitting": {
+			"loop": true,
+			"animation_length": 16.58333,
+			"bones": {
+				"rightLeg": {
+					"rotation": ["-87 - this", "8 - this", "-this"]
+				},
+				"leftLeg": {
+					"rotation": ["-87 - this", "-8 - this", "-this"]
+				},
+				"all": {
+					"position": [0, -7, 0]
+				},
+				"head": {
+					"rotation": [5, 0, 0],
+					"position": [0, -1, 0]
+				},
+				"body": {
+					"rotation": [0, 0, 0],
+					"position": [0, -0.8, 0]
+				},
+				"rightArm": {
+					"rotation": [0, 0, -33],
+					"position": [0.4, -1.9, -0.6]
+				},
+				"leftArm": {
+					"rotation": [0, 0, 33],
+					"position": [-0.4, -1.9, -0.6]
+				}
+			}
+		},
+		"animation.humanoidbunny.attack": {
+			"loop": true,
+			"animation_length": 0.45833,
+			"bones": {
+				"rightArm": {
+					"rotation": ["math.sin(query.anim_time*400)*-120", 0, 0]
+				},
+				"leftArm": {
+					"rotation": ["math.sin(query.anim_time*400)*-120", 0, 0]
+				},
+				"armorRightArm": {
+					"rotation": ["math.sin(query.anim_time*400)*-100.0421", "math.sin(query.anim_time*400)*-27.9837", 0]
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -1,39 +1,38 @@
 package net.pevori.queencats.entity.custom;
 
+
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.pevori.queencats.entity.ModEntityTypes;
-import net.pevori.queencats.entity.variants.HumanoidCatVariant;
+import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
+import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 
 import javax.annotation.Nullable;
+import java.util.logging.Level;
 
-public class PrincessCatEntity  extends HumanoidCatEntity{
-    public PrincessCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+public class PrincessBunnyEntity extends HumanoidBunnyEntity{
+    public PrincessBunnyEntity(EntityType<? extends TamableAnimal> entityType, net.minecraft.world.level.Level level) {
         super(entityType, level);
-    }
-
-    public static AttributeSupplier setAttributes() {
-        return TamableAnimal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 4.0f)
-                .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
     }
 
     protected void registerGoals() {
@@ -42,7 +41,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_WHEAT.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -65,38 +64,22 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
 
         if (item instanceof DyeItem && this.isOwnedBy(player)) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
-            if (dyeColor == DyeColor.BLACK) {
-                this.setVariant(HumanoidCatVariant.BLACK);
+            if (dyeColor == DyeColor.LIGHT_GRAY) {
+                this.setVariant(HumanoidBunnyVariant.COCOA);
             } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(HumanoidCatVariant.WHITE);
-            } else if (dyeColor == DyeColor.ORANGE) {
-                this.setVariant(HumanoidCatVariant.CALICO);
-            } else if (dyeColor == DyeColor.GRAY) {
-                this.setVariant(HumanoidCatVariant.CALLAS);
+                this.setVariant(HumanoidBunnyVariant.SNOW);
+            } else if (dyeColor == DyeColor.YELLOW) {
+                this.setVariant(HumanoidBunnyVariant.SUNDAY);
+            } else if (dyeColor == DyeColor.PINK) {
+                this.setVariant(HumanoidBunnyVariant.STRAWBERRY);
             }
 
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
 
-            //this.setPersistent();
             this.setPersistenceRequired();
             return InteractionResult.CONSUME;
-        }
-
-        if (this.hasItemInSlot(EquipmentSlot.CHEST) && isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND
-                && player.isShiftKeyDown()) {
-            if (!player.getAbilities().instabuild) {
-                player.addItem(this.getItemBySlot(EquipmentSlot.CHEST));
-            }
-            this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlot(EquipmentSlot.CHEST, itemstack.copy());
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            return InteractionResult.SUCCESS;
         }
 
         if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
@@ -114,7 +97,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
+                    this.playSound(ModSounds.HUMANOID_DOG_EAT.get(), 1.0f, 1.0f);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -155,30 +138,26 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         return super.mobInteract(player, hand);
     }
 
-
-
     public void startGrowth() {
-        HumanoidCatVariant variant = this.getVariant();
-        QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(this.level);
+        HumanoidBunnyVariant variant = this.getVariant();
+        QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(this.level);
+        queenBunnyEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+        queenBunnyEntity.setNoAi(this.isNoAi());
 
-        queenCatEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
-        queenCatEntity.setNoAi(this.isNoAi());
-        queenCatEntity.setVariant(variant);
+        queenBunnyEntity.setVariant(variant);
 
         if (this.hasCustomName()) {
-            queenCatEntity.setCustomName(this.getCustomName());
-            queenCatEntity.setCustomNameVisible(this.isCustomNameVisible());
+            queenBunnyEntity.setCustomName(this.getCustomName());
+            queenBunnyEntity.setCustomNameVisible(this.isCustomNameVisible());
         }
 
-        queenCatEntity.setPersistenceRequired();
-        queenCatEntity.setOwnerUUID(this.getOwnerUUID());
-        queenCatEntity.setTame(true);
-        queenCatEntity.setSitting(this.isSitting());
-
-        this.level.addFreshEntity(queenCatEntity);
+        queenBunnyEntity.setPersistenceRequired();
+        queenBunnyEntity.setOwnerUUID(this.getOwnerUUID());
+        queenBunnyEntity.setTame(true);
+        queenBunnyEntity.setSitting(this.isSitting());
+        this.level.addFreshEntity(queenBunnyEntity);
         this.discard();
     }
-
 
     @Override
     public void setTame(boolean tamed) {
@@ -195,11 +174,10 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         }
     }
 
-    /* VARIANTS */
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_146746_, DifficultyInstance p_146747_,
-                                        MobSpawnType p_146748_, @Nullable SpawnGroupData p_146749_,
+                                        MobSpawnType p_146748_, @javax.annotation.Nullable SpawnGroupData p_146749_,
                                         @Nullable CompoundTag p_146750_) {
-        HumanoidCatVariant variant = Util.getRandom(HumanoidCatVariant.values(), this.random);
+        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
         setVariant(variant);
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
     }
