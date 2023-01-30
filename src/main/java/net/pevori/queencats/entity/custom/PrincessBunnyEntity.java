@@ -23,12 +23,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.pevori.queencats.entity.ModEntityTypes;
 import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
-import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 
 import javax.annotation.Nullable;
-import java.util.logging.Level;
 
 public class PrincessBunnyEntity extends HumanoidBunnyEntity{
     public PrincessBunnyEntity(EntityType<? extends TamableAnimal> entityType, net.minecraft.world.level.Level level) {

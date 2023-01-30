@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.PrincessBunnyEntity;
 import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Map;
 

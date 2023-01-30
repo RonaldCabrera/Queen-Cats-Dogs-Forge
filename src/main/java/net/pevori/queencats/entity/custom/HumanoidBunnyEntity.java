@@ -28,22 +28,23 @@ import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
-    protected AnimationFactory factory = new AnimationFactory(this);
+public class HumanoidBunnyEntity extends TamableAnimal implements GeoEntity {
+    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected Ingredient itemForHealing = Ingredient.of(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT.get(), Items.GOLDEN_CARROT);
     protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
             Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
+    protected static final EntityDataAccessor<Boolean> SITTING =
+            SynchedEntityData.defineId(HumanoidBunnyEntity.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
+            SynchedEntityData.defineId(HumanoidBunnyEntity.class, EntityDataSerializers.INT);
     public static final String pekoSan = "pekora";
 
     protected HumanoidBunnyEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -57,8 +58,8 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
     }
 
     public boolean isAlmond(){
-        String s = this.getName().getString();
-        return (s != null && s.toLowerCase().contains(pekoSan));
+        String name = this.getName().getString();
+        return name.toLowerCase().contains(pekoSan);
     }
 
     @Override
@@ -91,26 +92,25 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
         this.playSound(SoundEvents.RABBIT_JUMP, 0.15f, 1.0f);
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+    private PlayState predicate(AnimationState animationState) {
         if (this.isSitting()) {
-            event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.sitting", true));
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidbunny.sitting", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
-        if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.walk", true));
+        if (animationState.isMoving()) {
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidbunny.walk", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.idle", true));
+        animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidbunny.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
-    private PlayState attackPredicate(AnimationEvent event) {
-        if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.attack", false));
+    private PlayState attackPredicate(AnimationState state) {
+        if(this.swinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
+            state.getController().forceAnimationReset();
+            state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidbunny.attack", Animation.LoopType.PLAY_ONCE));
             this.swinging = false;
         }
 
@@ -118,22 +118,19 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "controller",
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller",
                 0, this::predicate));
-        animationData.addAnimationController(new AnimationController(this, "attackController",
+        controllers.add(new AnimationController(this, "attackController",
                 0, this::attackPredicate));
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 
     /* TAMEABLE ENTITY */
-    protected static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(HumanoidBunnyEntity.class,
-            EntityDataSerializers.BOOLEAN);
-
     public void setSitting(boolean sitting){
         this.entityData.set(SITTING, sitting);
         this.setOrderedToSit(sitting);
@@ -202,9 +199,6 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
     }
 
     /* VARIANTS */
-    protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
-            SynchedEntityData.defineId(HumanoidBunnyEntity.class, EntityDataSerializers.INT);
-
     public HumanoidBunnyVariant getVariant() {
         return HumanoidBunnyVariant.byId(this.getTypeVariant() & 255);
     }

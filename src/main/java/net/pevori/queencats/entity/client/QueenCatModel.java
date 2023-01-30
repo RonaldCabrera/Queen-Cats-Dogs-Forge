@@ -4,12 +4,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.QueenCatEntity;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-public class QueenCatModel extends AnimatedGeoModel<QueenCatEntity> {
+public class QueenCatModel extends GeoModel<QueenCatEntity> {
     @Override
     public ResourceLocation getModelResource(QueenCatEntity object) {
         if(object.hasItemInSlot(EquipmentSlot.CHEST)){
@@ -29,16 +30,16 @@ public class QueenCatModel extends AnimatedGeoModel<QueenCatEntity> {
         return new ResourceLocation(QueenCats.MOD_ID, "animations/humanoid_cat.animation.json");
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void setLivingAnimations(QueenCatEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head");
+    public void setCustomAnimations(QueenCatEntity animatable, long instanceId, AnimationState<QueenCatEntity> animationState) {
+        super.setCustomAnimations(animatable, instanceId, animationState);
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        CoreGeoBone head = getAnimationProcessor().getBone("head");
+        EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+
         if (head != null) {
-            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
-            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+            head.setRotX(entityData.headPitch() * ((float) Math.PI / 180F));
+            head.setRotY(entityData.netHeadYaw() * ((float) Math.PI / 180F));
         }
     }
 }

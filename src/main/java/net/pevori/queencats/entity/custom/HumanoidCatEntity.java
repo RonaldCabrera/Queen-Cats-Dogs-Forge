@@ -9,7 +9,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
@@ -21,27 +24,18 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.pevori.queencats.entity.variants.HumanoidCatVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Formattable;
-
-public class HumanoidCatEntity extends TamableAnimal implements IAnimatable {
-    public static final String okayuSan = "okayu";
-    protected AnimationFactory factory = new AnimationFactory(this);
+public class HumanoidCatEntity extends TamableAnimal implements GeoEntity {
+    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
     protected Item itemForTaming = ModItems.GOLDEN_FISH.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected Ingredient itemForHealing = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.GOLDEN_FISH.get());
@@ -49,9 +43,9 @@ public class HumanoidCatEntity extends TamableAnimal implements IAnimatable {
             Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     protected static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.BOOLEAN);
-
     protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
             SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.INT);
+    public static final String okayuSan = "okayu";
 
     protected HumanoidCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
@@ -73,26 +67,25 @@ public class HumanoidCatEntity extends TamableAnimal implements IAnimatable {
         return (s != null && s.toLowerCase().contains(okayuSan));
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.walk", true));
-            return PlayState.CONTINUE;
-        }
-
+    private PlayState predicate(software.bernie.geckolib.core.animation.AnimationState animationState) {
         if (this.isSitting()) {
-            event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.sitting", true));
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.sitting", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.idle", true));
+        if (animationState.isMoving()) {
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.walk", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+
+        animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
-    private PlayState attackPredicate(AnimationEvent event){
-        if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)){
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.attack", false));
+    private PlayState attackPredicate(AnimationState state){
+        if(this.swinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)){
+            state.getController().forceAnimationReset();
+            state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.attack", Animation.LoopType.PLAY_ONCE));
             this.swinging = false;
         }
 
@@ -100,16 +93,16 @@ public class HumanoidCatEntity extends TamableAnimal implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller",
                 0, this::predicate));
-        data.addAnimationController(new AnimationController(this, "attackController",
+        controllers.add(new AnimationController(this, "attackController",
                 0, this::attackPredicate));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return factory;
     }
 
     @Override

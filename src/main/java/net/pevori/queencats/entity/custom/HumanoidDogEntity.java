@@ -28,25 +28,22 @@ import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidDogEntity extends TamableAnimal  implements IAnimatable {
-    public static final String koroSan = "korone";
-    protected AnimationFactory factory = new AnimationFactory(this);
+public class HumanoidDogEntity extends TamableAnimal implements GeoEntity {
+    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
+    protected Item itemForTaming = ModItems.GOLDEN_BONE.get();
+    protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
+            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     protected static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(HumanoidDogEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
             SynchedEntityData.defineId(HumanoidDogEntity.class, EntityDataSerializers.INT);
-    protected Item itemForTaming = ModItems.GOLDEN_BONE.get();
-    protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
+    public static final String koroSan = "korone";
 
     protected HumanoidDogEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
@@ -63,26 +60,25 @@ public class HumanoidDogEntity extends TamableAnimal  implements IAnimatable {
         return (s != null && s.toLowerCase().contains(koroSan));
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.walk", true));
-            return PlayState.CONTINUE;
-        }
-
+    private PlayState predicate(AnimationState animationState) {
         if (this.isSitting()) {
-            event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.sitting", true));
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoiddog.sitting", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", true));
+        if (animationState.isMoving()) {
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoiddog.walk", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+
+        animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoiddog.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
-    private PlayState attackPredicate(AnimationEvent event){
-        if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)){
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", false));
+    private PlayState attackPredicate(AnimationState state){
+        if(this.swinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)){
+            state.getController().forceAnimationReset();
+            state.getController().setAnimation(RawAnimation.begin().then("animation.humanoiddog.attack", Animation.LoopType.PLAY_ONCE));
             this.swinging = false;
         }
 
@@ -90,16 +86,16 @@ public class HumanoidDogEntity extends TamableAnimal  implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller",
                 0, this::predicate));
-        data.addAnimationController(new AnimationController(this, "attackController",
+        controllers.add(new AnimationController(this, "attackController",
                 0, this::attackPredicate));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return factory;
     }
 
     @Override
