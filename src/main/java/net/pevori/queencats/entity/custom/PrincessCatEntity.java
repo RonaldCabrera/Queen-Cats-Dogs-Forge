@@ -44,14 +44,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable {
-    private AnimationFactory factory = new AnimationFactory(this);
-    private static final EntityDataAccessor<Boolean> SITTING =
-            SynchedEntityData.defineId(PrincessCatEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
-            SynchedEntityData.defineId(PrincessCatEntity.class, EntityDataSerializers.INT);
-
+public class PrincessCatEntity extends HumanoidCatEntity{
     public PrincessCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
@@ -78,70 +71,6 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.walk", true));
-            return PlayState.CONTINUE;
-        }
-
-        if (this.isSitting()) {
-            event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.sitting", true));
-            return PlayState.CONTINUE;
-        }
-
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.idle", true));
-        return PlayState.CONTINUE;
-    }
-
-    private PlayState attackPredicate(AnimationEvent event){
-        if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)){
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcat.attack", false));
-            this.swinging = false;
-        }
-
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
-                0, this::predicate));
-        data.addAnimationController(new AnimationController(this, "attackController",
-                0, this::attackPredicate));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return ModSounds.HUMANOID_CAT_AMBIENT.get();
-    }
-
-    @Override
-    public SoundEvent getEatingSound(ItemStack stack) {
-        return ModSounds.HUMANOID_CAT_EAT.get();
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_CAT_HURT.get();
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_CAT_DEATH.get();
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.WOLF_STEP, 0.15f, 1.0f);
-    }
-
     /* Tamable Entity */
     @Nullable
     @Override
@@ -151,8 +80,8 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item item = itemstack.getItem();
+        ItemStack itemStack = player.getItemInHand(hand);
+        Item item = itemStack.getItem();
 
         Item itemForTaming = ModItems.GOLDEN_FISH.get();
         Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
@@ -162,7 +91,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
 
         if (item == itemForGrowth && isTame() && this.isOwnedBy(player)) {
             if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
+                itemStack.shrink(1);
             }
             startGrowth();
             return InteractionResult.CONSUME;
@@ -181,10 +110,9 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
             }
 
             if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
+                itemStack.shrink(1);
             }
 
-            //this.setPersistent();
             this.setPersistenceRequired();
             return InteractionResult.CONSUME;
         }
@@ -196,20 +124,20 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
             }
             this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
             return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlot(EquipmentSlot.CHEST, itemstack.copy());
+        } else if (equippableArmor.test(itemStack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
+            this.setItemSlot(EquipmentSlot.CHEST, itemStack.copy());
             if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
+                itemStack.shrink(1);
             }
             return InteractionResult.SUCCESS;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemStack)) && isTame() && this.getHealth() < getMaxHealth()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
+                    itemStack.shrink(1);
                 }
 
                 if (!this.level.isClientSide()) {
@@ -219,7 +147,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -231,11 +159,11 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
+                    itemStack.shrink(1);
                 }
 
                 if (!this.level.isClientSide()) {
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
@@ -253,53 +181,11 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
             return InteractionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
+        if (itemStack.getItem() == itemForTaming) {
             return InteractionResult.PASS;
         }
 
         return super.mobInteract(player, hand);
-    }
-
-    @Override
-    public boolean wantsToAttack(LivingEntity entity, LivingEntity owner) {
-        if (!(entity instanceof Creeper) && !(entity instanceof Ghast)) {
-            if (entity instanceof HumanoidCatEntity) {
-                HumanoidCatEntity humanoid = (HumanoidCatEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof HumanoidDogEntity) {
-                HumanoidDogEntity humanoid = (HumanoidDogEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof Player && owner instanceof Player && !((Player)owner).canHarmPlayer((Player)entity)) {
-                return false;
-            } else if (entity instanceof AbstractHorse && ((AbstractHorse)entity).isTamed()) {
-                return false;
-            } else {
-                return !(entity instanceof TamableAnimal) || !((TamableAnimal)entity).isTame();
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        setSitting(tag.getBoolean("isSitting"));
-        this.entityData.set(DATA_ID_TYPE_VARIANT, tag.getInt("Variant"));
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.putBoolean("isSitting", this.isSitting());
-        tag.putInt("Variant", this.getTypeVariant());
-    }
-
-    @Override
-    protected void defineSynchedData(){
-        super.defineSynchedData();
-        this.entityData.define(SITTING, false);
-        this.entityData.define(DATA_ID_TYPE_VARIANT, 0);
     }
 
     public void startGrowth() {
@@ -324,25 +210,6 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
         this.discard();
     }
 
-    public void setSitting(boolean sitting){
-        this.entityData.set(SITTING, sitting);
-        this.setOrderedToSit(sitting);
-    }
-
-    public boolean isSitting() {
-        return this.entityData.get(SITTING);
-    }
-
-    @Override
-    public Team getTeam() {
-        return super.getTeam();
-    }
-
-    @Override
-    public boolean canBeLeashed(Player pPlayer) {
-        return false;
-    }
-
     @Override
     public void setTame(boolean tamed) {
         super.setTame(tamed);
@@ -365,17 +232,5 @@ public class PrincessCatEntity  extends HumanoidCatEntity implements IAnimatable
         HumanoidCatVariant variant = Util.getRandom(HumanoidCatVariant.values(), this.random);
         setVariant(variant);
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
-    }
-
-    public HumanoidCatVariant getVariant() {
-        return HumanoidCatVariant.byId(this.getTypeVariant() & 255);
-    }
-
-    private int getTypeVariant() {
-        return this.entityData.get(DATA_ID_TYPE_VARIANT);
-    }
-
-    protected void setVariant(HumanoidCatVariant variant) {
-        this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

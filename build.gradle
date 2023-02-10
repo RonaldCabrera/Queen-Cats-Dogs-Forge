@@ -25,7 +25,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '1.0.2-1.18.2-Forge'
+version = '1.0.3-1.18.2-Forge'
 group = 'net.pevori.queencats' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'queencats'
 
@@ -163,7 +163,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
 
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.41')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.57')
 
     // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

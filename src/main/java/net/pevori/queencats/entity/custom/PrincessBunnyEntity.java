@@ -1,61 +1,38 @@
 package net.pevori.queencats.entity.custom;
 
+
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.scores.Team;
 import net.pevori.queencats.entity.ModEntityTypes;
-import net.pevori.queencats.entity.variants.HumanoidCatVariant;
+import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
 import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.logging.Level;
 
-public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
-    public QueenDogEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+public class PrincessBunnyEntity extends HumanoidBunnyEntity{
+    public PrincessBunnyEntity(EntityType<? extends TamableAnimal> entityType, net.minecraft.world.level.Level level) {
         super(entityType, level);
-    }
-
-    public static AttributeSupplier setAttributes() {
-        return TamableAnimal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 8.0f)
-                .add(Attributes.ATTACK_SPEED, 2.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
     }
 
     protected void registerGoals() {
@@ -63,9 +40,8 @@ public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_WHEAT.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -73,72 +49,40 @@ public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
 
-    /* Tamable Entity */
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob){
-        PrincessDogEntity baby = ModEntityTypes.PRINCESS_DOG.get().create(serverLevel);
-        HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
-        baby.setVariant(variant);
-
-        if(this.isTame()){
-            baby.tame((Player) this.getOwner());
-            baby.setOwnerUUID(this.getOwnerUUID());
-        }
-
-        return baby;
-    }
-
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
-        Item itemForTaming = ModItems.GOLDEN_BONE.get();
-        Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
-
-        if (isFood(itemstack)) {
-            return super.mobInteract(player, hand);
+        if (item == itemForGrowth && isTame() && this.isOwnedBy(player)) {
+            if (!player.getAbilities().instabuild) {
+                itemstack.shrink(1);
+            }
+            startGrowth();
+            return InteractionResult.CONSUME;
         }
 
         if (item instanceof DyeItem && this.isOwnedBy(player)) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
-            if (dyeColor == DyeColor.BLACK) {
-                this.setVariant(HumanoidDogVariant.HUSKY);
+            if (dyeColor == DyeColor.LIGHT_GRAY) {
+                this.setVariant(HumanoidBunnyVariant.COCOA);
             } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(HumanoidDogVariant.SHIRO);
+                this.setVariant(HumanoidBunnyVariant.SNOW);
+            } else if (dyeColor == DyeColor.YELLOW) {
+                this.setVariant(HumanoidBunnyVariant.SUNDAY);
             } else if (dyeColor == DyeColor.PINK) {
-                this.setVariant(HumanoidDogVariant.CREAM);
-            } else if (dyeColor == DyeColor.GRAY) {
-                this.setVariant(HumanoidDogVariant.GRAY);
+                this.setVariant(HumanoidBunnyVariant.STRAWBERRY);
             }
 
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
 
-            //this.setPersistent();
             this.setPersistenceRequired();
             return InteractionResult.CONSUME;
         }
 
-        if (this.hasItemInSlot(EquipmentSlot.CHEST) && isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND
-                && player.isShiftKeyDown()) {
-            if (!player.getAbilities().instabuild) {
-                player.addItem(this.getItemBySlot(EquipmentSlot.CHEST));
-            }
-            this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlotAndDropWhenKilled(EquipmentSlot.CHEST, itemstack.copy());
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            return InteractionResult.SUCCESS;
-        }
-
-        if ((isMeat(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
@@ -194,22 +138,33 @@ public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
         return super.mobInteract(player, hand);
     }
 
-    public boolean isMeat(ItemStack pStack) {
-        Item item = pStack.getItem();
-        return item.isEdible() && pStack.getFoodProperties(this).isMeat();
-    }
+    public void startGrowth() {
+        HumanoidBunnyVariant variant = this.getVariant();
+        QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(this.level);
+        queenBunnyEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+        queenBunnyEntity.setNoAi(this.isNoAi());
 
-    @Override
-    public boolean isFood(ItemStack stack) {
-        return stack.getItem() == ModItems.KEMOMIMI_POTION.get();
+        queenBunnyEntity.setVariant(variant);
+
+        if (this.hasCustomName()) {
+            queenBunnyEntity.setCustomName(this.getCustomName());
+            queenBunnyEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+
+        queenBunnyEntity.setPersistenceRequired();
+        queenBunnyEntity.setOwnerUUID(this.getOwnerUUID());
+        queenBunnyEntity.setTame(true);
+        queenBunnyEntity.setSitting(this.isSitting());
+        this.level.addFreshEntity(queenBunnyEntity);
+        this.discard();
     }
 
     @Override
     public void setTame(boolean tamed) {
         super.setTame(tamed);
         if(tamed){
-            getAttribute(Attributes.MAX_HEALTH).setBaseValue(60.0D);
-            getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
+            getAttribute(Attributes.MAX_HEALTH).setBaseValue(40.0D);
+            getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.5D);
             getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((double) 0.3f);
         }
         else{
@@ -219,11 +174,10 @@ public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
         }
     }
 
-    /* VARIANTS */
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_146746_, DifficultyInstance p_146747_,
                                         MobSpawnType p_146748_, @Nullable SpawnGroupData p_146749_,
                                         @Nullable CompoundTag p_146750_) {
-        HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
+        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
         setVariant(variant);
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
     }

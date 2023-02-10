@@ -27,7 +27,7 @@ public class QueenDogMixin {
          * This is the logic to generate a new Queen Dog, pretty much the same as
          * a pig getting hit by lightning.
          */
-        if (thisWolf.isTame() && thisWolf.isOwnedBy(player) && usedItem == ModItems.GOLDEN_BONE.get()) {
+        if (thisWolf.isTame() && thisWolf.isOwnedBy(player) && usedItem == ModItems.KEMOMIMI_POTION.get()) {
             if (!player.getAbilities().instabuild) {
                 player.getItemInHand(hand).shrink(1);
             }

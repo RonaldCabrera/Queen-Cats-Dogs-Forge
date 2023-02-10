@@ -16,7 +16,10 @@ public class ModEventBusEvents {
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.QUEEN_CAT.get(), QueenCatEntity.setAttributes());
         event.put(ModEntityTypes.QUEEN_DOG.get(), QueenDogEntity.setAttributes());
+        event.put(ModEntityTypes.QUEEN_BUNNY.get(), QueenDogEntity.setAttributes());
+
         event.put(ModEntityTypes.PRINCESS_CAT.get(), PrincessCatEntity.setAttributes());
         event.put(ModEntityTypes.PRINCESS_DOG.get(), PrincessDogEntity.setAttributes());
+        event.put(ModEntityTypes.PRINCESS_BUNNY.get(), PrincessDogEntity.setAttributes());
     }
 }
