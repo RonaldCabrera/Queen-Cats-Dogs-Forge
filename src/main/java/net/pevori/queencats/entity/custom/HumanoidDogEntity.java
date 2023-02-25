@@ -29,13 +29,15 @@ import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class HumanoidDogEntity extends TamableAnimal implements IAnimatable {
-    protected AnimationFactory factory = new AnimationFactory(this);
+    protected AnimationFactory factory = GeckoLibUtil.createFactory(this);
     protected static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(HumanoidDogEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -47,25 +49,25 @@ public class HumanoidDogEntity extends TamableAnimal implements IAnimatable {
         super(entityType, level);
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.walk", true));
-            return PlayState.CONTINUE;
-        }
-
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.sitting", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.sitting", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", true));
+        if (event.isMoving()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            return PlayState.CONTINUE;
+        }
+
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
-    private PlayState attackPredicate(AnimationEvent event){
+    protected <E extends IAnimatable> PlayState attackPredicate(AnimationEvent<E> event){
         if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)){
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoiddog.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             this.swinging = false;
         }
 
@@ -82,7 +84,7 @@ public class HumanoidDogEntity extends TamableAnimal implements IAnimatable {
 
     @Override
     public AnimationFactory getFactory() {
-        return this.factory;
+        return factory;
     }
 
     @Override

@@ -24,7 +24,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 
 import javax.annotation.Nullable;
 
-public class QueenCatEntity extends HumanoidCatEntity implements IAnimatable {
+public class QueenCatEntity extends HumanoidCatEntity{
     public QueenCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }

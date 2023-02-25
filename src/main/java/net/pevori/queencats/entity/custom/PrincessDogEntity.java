@@ -53,7 +53,6 @@ public class PrincessDogEntity extends HumanoidDogEntity {
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
 
-    /* Tamable Entity */
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob){

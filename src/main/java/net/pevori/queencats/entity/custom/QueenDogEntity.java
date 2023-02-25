@@ -45,7 +45,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
+public class QueenDogEntity  extends HumanoidDogEntity{
     public QueenDogEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
@@ -74,7 +74,6 @@ public class QueenDogEntity  extends HumanoidDogEntity implements IAnimatable {
     }
 
     /* Tamable Entity */
-    @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob){
         PrincessDogEntity baby = ModEntityTypes.PRINCESS_DOG.get().create(serverLevel);

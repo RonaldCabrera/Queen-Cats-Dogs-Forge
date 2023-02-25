@@ -14,10 +14,10 @@
 				"rightChest": {
 					"position": [0, 0, 0]
 				},
-				"rightArm": {
+				"rightArmBase": {
 					"rotation": [0, 0, "math.sin(query.anim_time*150)*-5"]
 				},
-				"leftArm": {
+				"leftArmBase": {
 					"rotation": [0, 0, "math.sin(query.anim_time*150)*5"]
 				},
 				"ear1": {
@@ -41,16 +41,11 @@
 				"tail": {
 					"rotation": [0, "math.sin(query.anim_time*300)*25", 0]
 				},
-				"rightArm": {
+				"rightArmBase": {
 					"rotation": ["math.sin(query.anim_time*450)*25", 0, 0]
 				},
-				"leftArm": {
+				"leftArmBase": {
 					"rotation": ["math.sin(query.anim_time*450)*-25", 0, 0]
-				},
-				"leftLeg_skart": {
-					"relative_to": {
-						"rotation": "entity"
-					}
 				}
 			}
 		},
@@ -58,14 +53,8 @@
 			"loop": true,
 			"animation_length": 16.58333,
 			"bones": {
-				"rightLeg": {
-					"rotation": ["-87 - this", "8 - this", "-this"]
-				},
-				"leftLeg": {
-					"rotation": ["-87 - this", "-8 - this", "-this"]
-				},
 				"all": {
-					"position": [0, -7, 0]
+					"position": [0, -5.975, 0]
 				},
 				"head": {
 					"rotation": [5, 0, 0],
@@ -82,6 +71,14 @@
 				"leftArm": {
 					"rotation": [0, 0, 33],
 					"position": [-0.4, -1.9, -0.6]
+				},
+				"leftLeg": {
+					"rotation": [-90, 0, 0],
+					"position": [0, -3, 1.5]
+				},
+				"rightLeg": {
+					"rotation": [-90, 0, 0],
+					"position": [0, -3, 1.5]
 				}
 			}
 		},
@@ -94,9 +91,6 @@
 				},
 				"leftArm": {
 					"rotation": ["math.sin(query.anim_time*400)*-120", 0, 0]
-				},
-				"armorRightArm": {
-					"rotation": ["math.sin(query.anim_time*400)*-100.0421", "math.sin(query.anim_time*400)*-27.9837", 0]
 				}
 			}
 		}

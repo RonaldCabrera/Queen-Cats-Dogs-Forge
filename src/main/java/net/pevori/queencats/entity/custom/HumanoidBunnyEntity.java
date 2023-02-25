@@ -32,13 +32,15 @@ import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
-    protected AnimationFactory factory = new AnimationFactory(this);
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected Ingredient itemForHealing = Ingredient.of(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT.get(), Items.GOLDEN_CARROT);
@@ -94,23 +96,23 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isSitting()) {
             event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.sitting", true));
+                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.sitting",  ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 
         if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.walk",  ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.idle",  ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
     private PlayState attackPredicate(AnimationEvent event) {
         if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.attack", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.attack",  ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             this.swinging = false;
         }
 
