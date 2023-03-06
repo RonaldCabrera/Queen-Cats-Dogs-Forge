@@ -10,12 +10,17 @@
   "item.queencats.princess_cat_spawn_egg": "猫公主刷怪蛋",
   "item.queencats.queen_dog_spawn_egg": "狗女王刷怪蛋",
   "item.queencats.princess_dog_spawn_egg": "狗公主刷怪蛋",
+  "item.queencats.queen_bunny_spawn_egg": "兔女王刷怪蛋",
+  "item.queencats.princess_bunny_spawn_egg": "兔公主刷怪蛋",
 
   "entity.queencats.queen_cat": "猫女王",
   "entity.queencats.princess_cat": "猫公主",
 
   "entity.queencats.queen_dog": "狗女王",
   "entity.queencats.princess_dog": "狗公主",
+
+  "entity.queencats.queen_bunny": "兔女王",
+  "entity.queencats.princess_bunny": "兔公主"
 
   "queencats.humanoid_cat_ambient": "猫娘：喵～",
   "queencats.humanoid_cat_eat": "猫娘：进食",
@@ -25,5 +30,10 @@
   "queencats.humanoid_dog_ambient": "狗娘：汪～",
   "queencats.humanoid_dog_eat": "狗娘：进食",
   "queencats.humanoid_dog_hurt": "狗娘：受伤",
-  "queencats.humanoid_dog_death": "狗娘：死亡"
+  "queencats.humanoid_dog_death": "狗娘：死亡",
+
+  "queencats.humanoid_bunny_ambient": "兔娘：吱吱",
+  "queencats.humanoid_bunny_eat": "兔娘：进食",
+  "queencats.humanoid_bunny_hurt": "兔娘：受伤",
+  "queencats.humanoid_bunny_death": "兔娘：死亡"
 }
