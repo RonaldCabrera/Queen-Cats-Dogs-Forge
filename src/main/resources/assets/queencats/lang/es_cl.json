@@ -23,18 +23,18 @@
     "entity.queencats.queen_bunny": "Princesa Conejo",
     "entity.queencats.princess_bunny": "Princesa Conejito",
 
-    "queencats.humanoid_cat_ambient": "Maullidos de Gato humanoide",
-    "queencats.humanoid_cat_eat": "Gato Humanoide come",
+    "queencats.humanoid_cat_ambient": "Maullidos de Gato Humanoide",
+    "queencats.humanoid_cat_eat": "Gato Humanoide comiendo",
     "queencats.humanoid_cat_hurt": "Gato Humanoide herido",
     "queencats.humanoid_cat_death": "Gato Humanoide muere",
 
-    "queencats.humanoid_dog_ambient": "Ladridos de Perro humanoide",
-    "queencats.humanoid_dog_eat": "Perro Humanoide come",
+    "queencats.humanoid_dog_ambient": "Ladridos de Perro Humanoide",
+    "queencats.humanoid_dog_eat": "Perro Humanoide comiendo",
     "queencats.humanoid_dog_hurt": "Perro Humanoide herido",
     "queencats.humanoid_dog_death": "Perro Humanoide muere",
 
-    "queencats.humanoid_bunny_ambient": "Ronroneo de Conejo humanoide",
-    "queencats.humanoid_bunny_eat": "Conejo Humanoide come",
+    "queencats.humanoid_bunny_ambient": "Ronroneo de Conejo Humanoide",
+    "queencats.humanoid_bunny_eat": "Conejo Humanoide comiendo",
     "queencats.humanoid_bunny_hurt": "Conejo Humanoide herido",
     "queencats.humanoid_bunny_death": "Conejo Humanoide muere"
 }
