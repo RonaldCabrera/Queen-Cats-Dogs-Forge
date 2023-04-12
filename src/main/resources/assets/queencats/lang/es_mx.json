@@ -1,0 +1,40 @@
+{
+  "itemGroup.queencatstab": "Reinas Gatos",
+
+  "item.queencats.golden_fish": "Pez de Oro",
+  "item.queencats.golden_bone": "Hueso de Oro",
+  "item.queencats.golden_wheat": "Trigo de Oro",
+  "item.queencats.kemomimi_potion": "Poción Kemomimi",
+  "tooltip.queencats.glinted_item_tooltip": "Desbordado con la Energia §l§bKemomimi§r",
+
+  "item.queencats.queen_cat_spawn_egg": "Generar Reina Gato",
+  "item.queencats.princess_cat_spawn_egg": "Generar Princesa Gatito",
+  "item.queencats.queen_dog_spawn_egg": "Generar Reina Perro",
+  "item.queencats.princess_dog_spawn_egg": "Generar Princesa Cachorro",
+  "item.queencats.queen_bunny_spawn_egg": "Generar Reina Conejo",
+  "item.queencats.princess_bunny_spawn_egg": "Generar Princesa Conejito",
+
+  "entity.queencats.queen_cat": "Reina Gato",
+  "entity.queencats.princess_cat": "Princesa Gato",
+
+  "entity.queencats.queen_dog": "Reina Perro",
+  "entity.queencats.princess_dog": "Princesa Perro",
+
+  "entity.queencats.queen_bunny": "Princesa Conejo",
+  "entity.queencats.princess_bunny": "Princesa Conejo",
+
+  "queencats.humanoid_cat_ambient": "Maullidos de Gato Humanoide",
+  "queencats.humanoid_cat_eat": "Gato Humanoide Comiendo",
+  "queencats.humanoid_cat_hurt": "Gato Humanoide Herido",
+  "queencats.humanoid_cat_death": "Gato Humanoide Muere",
+
+  "queencats.humanoid_dog_ambient": "Ladridos de Perro Humanoide",
+  "queencats.humanoid_dog_eat": "Perro Humanoide Comiendo",
+  "queencats.humanoid_dog_hurt": "Perro Humanoide Herido",
+  "queencats.humanoid_dog_death": "Perro Humanoide Muere",
+
+  "queencats.humanoid_bunny_ambient": "Ronroneo de Conejo Humanoide",
+  "queencats.humanoid_bunny_eat": "Conejo Humanoide Comiendo",
+  "queencats.humanoid_bunny_hurt": "Conejo Humanoide Herido",
+  "queencats.humanoid_bunny_death": "Conejo Humanoide Muere"
+}

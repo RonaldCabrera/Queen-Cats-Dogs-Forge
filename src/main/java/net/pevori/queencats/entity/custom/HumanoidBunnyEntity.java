@@ -37,7 +37,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
+public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimatable {
     protected AnimationFactory factory = new AnimationFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
@@ -46,7 +46,7 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
             Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     public static final String pekoSan = "pekora";
 
-    protected HumanoidBunnyEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+    protected HumanoidBunnyEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
         super(entityType, level);
     }
 

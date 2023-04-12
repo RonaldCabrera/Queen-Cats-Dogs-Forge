@@ -11,6 +11,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.pevori.queencats.entity.ModEntityTypes;
 import net.pevori.queencats.entity.client.*;
 import net.pevori.queencats.item.ModItems;
+import net.pevori.queencats.gui.menu.ModMenuTypes;
 import net.pevori.queencats.sound.ModSounds;
 import org.slf4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
@@ -18,17 +19,15 @@ import software.bernie.geckolib3.GeckoLib;
 @Mod(QueenCats.MOD_ID)
 public class QueenCats {
     public static final String MOD_ID = "queencats";
-    private static final Logger LOGGER = LogUtils.getLogger();
-
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public QueenCats() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
-
         ModSounds.register(eventBus);
-
         ModEntityTypes.register(eventBus);
+        ModMenuTypes.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -46,9 +45,12 @@ public class QueenCats {
         EntityRenderers.register(ModEntityTypes.PRINCESS_CAT.get(), PrincessCatRenderer::new);
         EntityRenderers.register(ModEntityTypes.PRINCESS_DOG.get(), PrincessDogRenderer::new);
         EntityRenderers.register(ModEntityTypes.PRINCESS_BUNNY.get(), PrincessBunnyRenderer::new);
+
+        ModMenuTypes.registerScreen(event);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("Queen Cats, Online >:3");
+        ModMenuTypes.menuSetup(event);
     }
 }

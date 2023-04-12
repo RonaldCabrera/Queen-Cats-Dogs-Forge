@@ -39,21 +39,18 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Formattable;
 
-public class HumanoidCatEntity extends TamableAnimal implements IAnimatable {
+public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatable {
     public static final String okayuSan = "okayu";
     protected AnimationFactory factory = new AnimationFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_FISH.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected Ingredient itemForHealing = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.GOLDEN_FISH.get());
-    protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     protected static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.BOOLEAN);
-
     protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
             SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.INT);
 
-    protected HumanoidCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+    protected HumanoidCatEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
         super(entityType, level);
     }
 
