@@ -23,7 +23,7 @@ import net.pevori.queencats.item.ModItems;
 import javax.annotation.Nullable;
 
 public class QueenBunnyEntity extends HumanoidBunnyEntity{
-    public QueenBunnyEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+    public QueenBunnyEntity(EntityType<? extends HumanoidBunnyEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -36,10 +36,12 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
     }
 
     protected void registerGoals() {
+        super.registerGoals();
+
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 8.0f, 3.0f, false));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_WHEAT.get()), false));
@@ -55,11 +57,13 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
         ItemStack itemStack = player.getItemInHand(hand);
         Item item = itemStack.getItem();
 
+        super.mobInteract(player, hand);
+
         if (isFood(itemStack)) {
             return super.mobInteract(player, hand);
         }
 
-        if (item instanceof DyeItem && this.isOwnedBy(player)) {
+        if (item instanceof DyeItem && this.isOwnedBy(player) && !player.isShiftKeyDown()) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
             if (dyeColor == DyeColor.LIGHT_GRAY) {
                 this.setVariant(HumanoidBunnyVariant.COCOA);
@@ -79,22 +83,7 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
             return InteractionResult.CONSUME;
         }
 
-        if (this.hasItemInSlot(EquipmentSlot.CHEST) && isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND
-                && player.isShiftKeyDown()) {
-            if (!player.getAbilities().instabuild) {
-                player.addItem(this.getItemBySlot(EquipmentSlot.CHEST));
-            }
-            this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemStack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlotAndDropWhenKilled(EquipmentSlot.CHEST, itemStack.copy());
-            if (!player.getAbilities().instabuild) {
-                itemStack.shrink(1);
-            }
-            return InteractionResult.SUCCESS;
-        }
-
-        if ((itemForHealing.test(itemStack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemStack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
@@ -138,7 +127,7 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }

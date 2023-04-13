@@ -39,16 +39,14 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
+public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected Ingredient itemForHealing = Ingredient.of(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT.get(), Items.GOLDEN_CARROT);
-    protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     public static final String pekoSan = "pekora";
 
-    protected HumanoidBunnyEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+    protected HumanoidBunnyEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -143,33 +141,6 @@ public class HumanoidBunnyEntity extends TamableAnimal implements IAnimatable {
 
     public boolean isSitting() {
         return this.entityData.get(SITTING);
-    }
-
-    @Override
-    public boolean wantsToAttack(LivingEntity target, LivingEntity owner) {
-        if (target instanceof Creeper || target instanceof Ghast) {
-            return false;
-        }
-        if (target instanceof HumanoidBunnyEntity) {
-            HumanoidBunnyEntity humanoidBunnyEntity = (HumanoidBunnyEntity) target;
-            return !humanoidBunnyEntity.isTame() || humanoidBunnyEntity.getOwner() != owner;
-        }
-        else if (target instanceof HumanoidCatEntity) {
-            HumanoidCatEntity humanoidCatEntity = (HumanoidCatEntity) target;
-            return !humanoidCatEntity.isTame() || humanoidCatEntity.getOwner() != owner;
-        }
-        else if (target instanceof HumanoidDogEntity) {
-            HumanoidDogEntity humanoidDogEntity = (HumanoidDogEntity) target;
-            return !humanoidDogEntity.isTame() || humanoidDogEntity.getOwner() != owner;
-        }
-        else if (target instanceof Player && owner instanceof Player
-                && !((Player) owner).canHarmPlayer((Player) target)) {
-            return false;
-        }
-        else if (target instanceof AbstractHorse && ((AbstractHorse)target).isTamed()) {
-            return false;
-        }
-        return !(target instanceof TamableAnimal) || !((TamableAnimal) target).isTame();
     }
 
     @Override

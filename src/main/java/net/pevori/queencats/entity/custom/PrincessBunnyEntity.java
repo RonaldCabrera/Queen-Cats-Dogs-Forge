@@ -10,6 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
@@ -31,15 +32,25 @@ import javax.annotation.Nullable;
 import java.util.logging.Level;
 
 public class PrincessBunnyEntity extends HumanoidBunnyEntity{
-    public PrincessBunnyEntity(EntityType<? extends TamableAnimal> entityType, net.minecraft.world.level.Level level) {
+    public PrincessBunnyEntity(EntityType<? extends HumanoidBunnyEntity> entityType, net.minecraft.world.level.Level level) {
         super(entityType, level);
     }
 
+    public static AttributeSupplier setAttributes() {
+        return TamableAnimal.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.0f)
+                .add(Attributes.ATTACK_SPEED, 1.0f)
+                .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
+    }
+
     protected void registerGoals() {
+        super.registerGoals();
+
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 8.0f, 3.0f, false));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_WHEAT.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
@@ -54,7 +65,9 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
-        if (item == itemForGrowth && isTame() && this.isOwnedBy(player)) {
+        super.mobInteract(player, hand);
+
+        if (item == itemForGrowth && isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown()) {
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
@@ -62,7 +75,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             return InteractionResult.CONSUME;
         }
 
-        if (item instanceof DyeItem && this.isOwnedBy(player)) {
+        if (item instanceof DyeItem && this.isOwnedBy(player) && !player.isShiftKeyDown()) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
             if (dyeColor == DyeColor.LIGHT_GRAY) {
                 this.setVariant(HumanoidBunnyVariant.COCOA);
@@ -82,7 +95,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             return InteractionResult.CONSUME;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
@@ -126,7 +139,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
@@ -143,6 +156,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(this.level);
         queenBunnyEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         queenBunnyEntity.setNoAi(this.isNoAi());
+        queenBunnyEntity.setInventory(this.inventory);
 
         queenBunnyEntity.setVariant(variant);
 

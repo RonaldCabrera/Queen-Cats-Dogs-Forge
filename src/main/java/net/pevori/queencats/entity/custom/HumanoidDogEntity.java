@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
 import net.pevori.queencats.entity.variants.HumanoidDogVariant;
+import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.AnimationState;
@@ -36,8 +37,10 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class HumanoidDogEntity extends TamableAnimal implements IAnimatable {
+public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatable {
     protected AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    protected Item itemForTaming = ModItems.GOLDEN_BONE.get();
+    protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(HumanoidDogEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -45,7 +48,7 @@ public class HumanoidDogEntity extends TamableAnimal implements IAnimatable {
             SynchedEntityData.defineId(HumanoidDogEntity.class, EntityDataSerializers.INT);
     public static final String koroSan = "korone";
 
-    protected HumanoidDogEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+    protected HumanoidDogEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -114,27 +117,6 @@ public class HumanoidDogEntity extends TamableAnimal implements IAnimatable {
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.WOLF_STEP, 0.15f, 1.0f);
-    }
-
-    @Override
-    public boolean wantsToAttack(LivingEntity entity, LivingEntity owner) {
-        if (!(entity instanceof Creeper) && !(entity instanceof Ghast)) {
-            if (entity instanceof HumanoidCatEntity) {
-                HumanoidCatEntity humanoid = (HumanoidCatEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof HumanoidDogEntity) {
-                HumanoidDogEntity humanoid = (HumanoidDogEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof Player && owner instanceof Player && !((Player)owner).canHarmPlayer((Player)entity)) {
-                return false;
-            } else if (entity instanceof AbstractHorse && ((AbstractHorse)entity).isTamed()) {
-                return false;
-            } else {
-                return !(entity instanceof TamableAnimal) || !((TamableAnimal)entity).isTame();
-            }
-        } else {
-            return false;
-        }
     }
 
     @Override

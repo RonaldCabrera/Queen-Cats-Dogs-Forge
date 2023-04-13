@@ -1,52 +1,30 @@
 package net.pevori.queencats.entity.custom;
 
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.scores.Team;
 import net.pevori.queencats.entity.ModEntityTypes;
-import net.pevori.queencats.entity.variants.HumanoidCatVariant;
 import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
-import net.pevori.queencats.sound.ModSounds;
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class QueenDogEntity  extends HumanoidDogEntity{
-    public QueenDogEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+public class QueenDogEntity extends HumanoidDogEntity{
+    public QueenDogEntity(EntityType<? extends HumanoidDogEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -59,10 +37,12 @@ public class QueenDogEntity  extends HumanoidDogEntity{
     }
 
     protected void registerGoals() {
+        super.registerGoals();
+
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 8.0f, 3.0f, false));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
@@ -93,15 +73,13 @@ public class QueenDogEntity  extends HumanoidDogEntity{
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
-        Item itemForTaming = ModItems.GOLDEN_BONE.get();
-        Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
+        super.mobInteract(player, hand);
 
         if (isFood(itemstack)) {
             return super.mobInteract(player, hand);
         }
 
-        if (item instanceof DyeItem && this.isOwnedBy(player)) {
+        if (item instanceof DyeItem && this.isOwnedBy(player) && !player.isShiftKeyDown()) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
             if (dyeColor == DyeColor.BLACK) {
                 this.setVariant(HumanoidDogVariant.HUSKY);
@@ -122,22 +100,7 @@ public class QueenDogEntity  extends HumanoidDogEntity{
             return InteractionResult.CONSUME;
         }
 
-        if (this.hasItemInSlot(EquipmentSlot.CHEST) && isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND
-                && player.isShiftKeyDown()) {
-            if (!player.getAbilities().instabuild) {
-                player.addItem(this.getItemBySlot(EquipmentSlot.CHEST));
-            }
-            this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlotAndDropWhenKilled(EquipmentSlot.CHEST, itemstack.copy());
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            return InteractionResult.SUCCESS;
-        }
-
-        if ((isMeat(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((isMeat(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
@@ -181,7 +144,7 @@ public class QueenDogEntity  extends HumanoidDogEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
