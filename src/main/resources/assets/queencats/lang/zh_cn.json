@@ -1,29 +1,29 @@
 {
-  "itemGroup.queencatstab": "猫女王",
-
-  "item.queencats.golden_fish": "黄金鱼",
-  "item.queencats.golden_bone": "黄金骨头",
-  "item.queencats.kemomimi_potion": "兽耳药水",
-  "tooltip.queencats.glinted_item_tooltip": "§l§b兽耳§r能量溢出了",
-
-  "item.queencats.queen_cat_spawn_egg": "猫女王刷怪蛋",
-  "item.queencats.princess_cat_spawn_egg": "猫公主刷怪蛋",
-  "item.queencats.queen_dog_spawn_egg": "狗女王刷怪蛋",
-  "item.queencats.princess_dog_spawn_egg": "狗公主刷怪蛋",
-
-  "entity.queencats.queen_cat": "猫女王",
-  "entity.queencats.princess_cat": "猫公主",
-
-  "entity.queencats.queen_dog": "狗女王",
-  "entity.queencats.princess_dog": "狗公主",
-
-  "queencats.humanoid_cat_ambient": "猫娘：喵～",
-  "queencats.humanoid_cat_eat": "猫娘：进食",
-  "queencats.humanoid_cat_hurt": "猫娘：受伤",
-  "queencats.humanoid_cat_death": "猫娘：死亡",
-
-  "queencats.humanoid_dog_ambient": "狗娘：汪～",
-  "queencats.humanoid_dog_eat": "狗娘：进食",
-  "queencats.humanoid_dog_hurt": "狗娘：受伤",
-  "queencats.humanoid_dog_death": "狗娘：死亡"
+    "itemGroup.queencatstab": "女王猫娘",
+  
+    "item.queencats.golden_fish": "黄金鱼",
+    "item.queencats.golden_bone": "黄金骨头",
+    "item.queencats.kemomimi_potion": "兽耳药水",
+    "tooltip.queencats.glinted_item_tooltip": "§l§b兽耳§r能量溢出了",
+  
+    "item.queencats.queen_cat_spawn_egg": "女王猫娘刷怪蛋",
+    "item.queencats.princess_cat_spawn_egg": "公主猫娘刷怪蛋",
+    "item.queencats.queen_dog_spawn_egg": "女王狗娘刷怪蛋",
+    "item.queencats.princess_dog_spawn_egg": "公主狗娘刷怪蛋",
+  
+    "entity.queencats.queen_cat": "女王猫娘",
+    "entity.queencats.princess_cat": "公主猫娘",
+  
+    "entity.queencats.queen_dog": "女王狗娘",
+    "entity.queencats.princess_dog": "公主狗娘",
+  
+    "queencats.humanoid_cat_ambient": "猫娘：喵～",
+    "queencats.humanoid_cat_eat": "猫娘：进食",
+    "queencats.humanoid_cat_hurt": "猫娘：受伤",
+    "queencats.humanoid_cat_death": "猫娘：死亡",
+  
+    "queencats.humanoid_dog_ambient": "狗娘：汪～",
+    "queencats.humanoid_dog_eat": "狗娘：进食",
+    "queencats.humanoid_dog_hurt": "狗娘：受伤",
+    "queencats.humanoid_dog_death": "狗娘：死亡"
 }

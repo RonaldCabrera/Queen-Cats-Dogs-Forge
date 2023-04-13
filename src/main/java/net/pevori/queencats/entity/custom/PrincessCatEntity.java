@@ -40,11 +40,12 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
     }
 
     protected void registerGoals() {
+        super.registerGoals();
+
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 9.0f, 2.0f, false));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 8.0f, 3.0f, false));        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
@@ -58,6 +59,8 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
+        super.mobInteract(player, hand);
+
         if (item == itemForGrowth && isTame() && this.isOwnedBy(player)) {
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
@@ -66,7 +69,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
             return InteractionResult.CONSUME;
         }
 
-        if (item instanceof DyeItem && this.isOwnedBy(player)) {
+        if (item instanceof DyeItem && this.isOwnedBy(player) && !player.isShiftKeyDown()) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
             if (dyeColor == DyeColor.BLACK) {
                 this.setVariant(HumanoidCatVariant.BLACK);
@@ -87,22 +90,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
             return InteractionResult.CONSUME;
         }
 
-        if (this.hasItemInSlot(EquipmentSlot.CHEST) && isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND
-                && player.isShiftKeyDown()) {
-            if (!player.getAbilities().instabuild) {
-                player.addItem(this.getItemBySlot(EquipmentSlot.CHEST));
-            }
-            this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            return InteractionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTame() && this.isOwnedBy(player) && !this.hasItemInSlot(EquipmentSlot.CHEST)) {
-            this.setItemSlot(EquipmentSlot.CHEST, itemstack.copy());
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            return InteractionResult.SUCCESS;
-        }
-
-        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
@@ -146,7 +134,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
@@ -158,14 +146,14 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         return super.mobInteract(player, hand);
     }
 
-
-
     public void startGrowth() {
         HumanoidCatVariant variant = this.getVariant();
         QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(this.level);
 
         queenCatEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         queenCatEntity.setNoAi(this.isNoAi());
+        queenCatEntity.setInventory(this.inventory);
+
         queenCatEntity.setVariant(variant);
 
         if (this.hasCustomName()) {
@@ -181,7 +169,6 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         this.level.addFreshEntity(queenCatEntity);
         this.discard();
     }
-
 
     @Override
     public void setTame(boolean tamed) {

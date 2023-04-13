@@ -34,13 +34,11 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidCatEntity extends TamableAnimal implements GeoEntity {
+public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
     protected Item itemForTaming = ModItems.GOLDEN_FISH.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
     protected Ingredient itemForHealing = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.GOLDEN_FISH.get());
-    protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     protected static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
@@ -128,27 +126,6 @@ public class HumanoidCatEntity extends TamableAnimal implements GeoEntity {
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.WOLF_STEP, 0.15f, 1.0f);
-    }
-
-    @Override
-    public boolean wantsToAttack(LivingEntity entity, LivingEntity owner) {
-        if (!(entity instanceof Creeper) && !(entity instanceof Ghast)) {
-            if (entity instanceof HumanoidCatEntity) {
-                HumanoidCatEntity humanoid = (HumanoidCatEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof HumanoidDogEntity) {
-                HumanoidDogEntity humanoid = (HumanoidDogEntity)entity;
-                return !humanoid.isTame() || humanoid.getOwner() != owner;
-            } else if (entity instanceof Player && owner instanceof Player && !((Player)owner).canHarmPlayer((Player)entity)) {
-                return false;
-            } else if (entity instanceof AbstractHorse && ((AbstractHorse)entity).isTamed()) {
-                return false;
-            } else {
-                return !(entity instanceof TamableAnimal) || !((TamableAnimal)entity).isTame();
-            }
-        } else {
-            return false;
-        }
     }
 
     @Override

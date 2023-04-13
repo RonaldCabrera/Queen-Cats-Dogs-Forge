@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.pevori.queencats.entity.ModEntityTypes;
 import net.pevori.queencats.entity.client.*;
+import net.pevori.queencats.gui.menu.ModMenuTypes;
 import net.pevori.queencats.item.ModCreativeModeTab;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -26,10 +27,9 @@ public class QueenCats {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
-
         ModSounds.register(eventBus);
-
         ModEntityTypes.register(eventBus);
+        ModMenuTypes.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -48,6 +48,8 @@ public class QueenCats {
         EntityRenderers.register(ModEntityTypes.PRINCESS_CAT.get(), PrincessCatRenderer::new);
         EntityRenderers.register(ModEntityTypes.PRINCESS_DOG.get(), PrincessDogRenderer::new);
         EntityRenderers.register(ModEntityTypes.PRINCESS_BUNNY.get(), PrincessBunnyRenderer::new);
+
+        ModMenuTypes.registerScreen(event);
     }
 
     private void addCreative(CreativeModeTabEvent.BuildContents event){
@@ -68,5 +70,6 @@ public class QueenCats {
 
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("Queen Cats, Online >:3");
+        ModMenuTypes.menuSetup(event);
     }
 }
