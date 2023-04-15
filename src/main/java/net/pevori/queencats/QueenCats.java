@@ -55,6 +55,5 @@ public class QueenCats {
 
     private void setup(final FMLCommonSetupEvent event) {
         QueenCats.LOGGER.info("Queen Cats Online >:3");
-        ModMenuTypes.menuSetup(event);
     }
 }
