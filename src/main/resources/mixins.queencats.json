@@ -3,6 +3,6 @@
   "package": "net.pevori.queencats.mixin",
   "refmap": "mixins.queencats.refmap.json",
   "mixins": [],
-  "client": ["QueenCatMixin", "QueenDogMixin", "QueenBunnyMixin"],
-  "server": ["QueenCatMixin", "QueenDogMixin", "QueenBunnyMixin"]
+  "client": ["QueenCatMixin", "QueenDogMixin", "QueenBunnyMixin", "QueenCowMixin"],
+  "server": ["QueenCatMixin", "QueenDogMixin", "QueenBunnyMixin", "QueenCowMixin"]
 }

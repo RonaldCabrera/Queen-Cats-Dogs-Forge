@@ -84,5 +84,42 @@
         "sounds": [
             "queencats:humanoid_bunny_death"
         ]
+    },
+
+    "humanoid_cow_ambient": {
+        "subtitle": "queencats.humanoid_cow_ambient",
+        "sounds": [
+            "queencats:humanoid_cow_ambient_1",
+            "queencats:humanoid_cow_ambient_2",
+            "queencats:humanoid_cow_ambient_3",
+            "queencats:humanoid_cow_ambient_4"
+        ]},
+    "humanoid_cow_eat": {
+        "subtitle": "queencats.humanoid_cow_eat",
+        "sounds": [
+            "queencats:humanoid_cow_eat_1"
+        ]
+    },
+    "humanoid_cow_hurt": {
+        "subtitle": "queencats.humanoid_cow_hurt",
+        "sounds": [
+            "queencats:humanoid_cow_hurt_1",
+            "queencats:humanoid_cow_hurt_2",
+            "queencats:humanoid_cow_hurt_3"
+        ]
+    },
+    "humanoid_cow_death": {
+        "subtitle": "queencats.humanoid_cow_death",
+        "sounds": [
+            "queencats:humanoid_cow_death"
+        ]
+    },
+    "humanoid_cow_milk": {
+        "subtitle": "queencats.humanoid_cow_milk",
+        "sounds": [
+            "queencats:humanoid_cow_milk_1",
+            "queencats:humanoid_cow_milk_2",
+            "queencats:humanoid_cow_milk_3"
+        ]
     }
 }

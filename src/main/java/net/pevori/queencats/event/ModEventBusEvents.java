@@ -14,9 +14,11 @@ public class ModEventBusEvents {
         event.put(ModEntityTypes.QUEEN_CAT.get(), QueenCatEntity.setAttributes());
         event.put(ModEntityTypes.QUEEN_DOG.get(), QueenDogEntity.setAttributes());
         event.put(ModEntityTypes.QUEEN_BUNNY.get(), QueenBunnyEntity.setAttributes());
+        event.put(ModEntityTypes.QUEEN_COW.get(), QueenBunnyEntity.setAttributes());
 
         event.put(ModEntityTypes.PRINCESS_CAT.get(), PrincessCatEntity.setAttributes());
         event.put(ModEntityTypes.PRINCESS_DOG.get(), PrincessDogEntity.setAttributes());
         event.put(ModEntityTypes.PRINCESS_BUNNY.get(), PrincessBunnyEntity.setAttributes());
+        event.put(ModEntityTypes.PRINCESS_COW.get(), PrincessBunnyEntity.setAttributes());
     }
 }

@@ -24,6 +24,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
+import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.variants.HumanoidCatVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -101,21 +102,37 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
 
     @Override
     protected SoundEvent getAmbientSound() {
+        if(!QueenCats.enableCatSounds){
+            return null;
+        }
+
         return ModSounds.HUMANOID_CAT_AMBIENT.get();
     }
 
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
+        if(!QueenCats.enableCatSounds){
+            return null;
+        }
+
         return ModSounds.HUMANOID_CAT_EAT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCats.enableCatSounds){
+            return null;
+        }
+
         return ModSounds.HUMANOID_CAT_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
+        if(!QueenCats.enableCatSounds){
+            return null;
+        }
+
         return ModSounds.HUMANOID_CAT_DEATH.get();
     }
 

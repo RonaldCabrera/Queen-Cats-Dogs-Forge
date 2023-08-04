@@ -1,9 +1,10 @@
 package net.pevori.queencats.entity.custom;
 
 import net.minecraft.Util;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,14 +20,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.pevori.queencats.entity.ModEntityTypes;
-import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
-import net.pevori.queencats.entity.variants.HumanoidCatVariant;
+import net.pevori.queencats.entity.variants.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 
 import javax.annotation.Nullable;
 
-public class QueenBunnyEntity extends HumanoidBunnyEntity{
-    public QueenBunnyEntity(EntityType<? extends HumanoidBunnyEntity> entityType, Level level) {
+public class QueenCowEntity extends HumanoidCowEntity{
+    public QueenCowEntity(EntityType<? extends HumanoidCowEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -47,7 +47,7 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0, 8.0f, 3.0f, false));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_WHEAT.get()), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0f, Ingredient.of(ModItems.GOLDEN_FISH.get()), false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -58,8 +58,8 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob){
-        PrincessBunnyEntity baby = ModEntityTypes.PRINCESS_BUNNY.get().create(serverLevel);
-        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
+        PrincessCowEntity baby = ModEntityTypes.PRINCESS_COW.get().create(serverLevel);
+        HumanoidCowVariant variant = Util.getRandom(HumanoidCowVariant.values(), this.random);
         baby.setVariant(variant);
 
         if(this.isTame()){
@@ -72,41 +72,58 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        Item item = itemStack.getItem();
+        ItemStack itemstack = player.getItemInHand(hand);
+        Item item = itemstack.getItem();
 
-        super.mobInteract(player, hand);
-
-        if (isFood(itemStack)) {
+        if (isFood(itemstack)) {
             return super.mobInteract(player, hand);
+        }
+
+        if (itemstack.is(Items.BUCKET) && this.isMilkableVariant()) {
+            player.playSound(getMilkingSound(), 1.0F, 1.0F);
+            ItemStack itemstack1 = ItemUtils.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
+            player.setItemInHand(hand, itemstack1);
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
+        }
+
+        if (itemstack.is(Items.BOWL) && this.isStewableVariant()) {
+            ItemStack itemstack1 = new ItemStack(Items.MUSHROOM_STEW);
+
+            ItemStack itemstack2 = ItemUtils.createFilledResult(itemstack, player, itemstack1, false);
+            player.setItemInHand(hand, itemstack2);
+
+            this.playSound(getMilkingSound(), 1.0F, 1.0F);
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
 
         if (item instanceof DyeItem && this.isOwnedBy(player) && !player.isShiftKeyDown()) {
             DyeColor dyeColor = ((DyeItem) item).getDyeColor();
-            if (dyeColor == DyeColor.LIGHT_GRAY) {
-                this.setVariant(HumanoidBunnyVariant.COCOA);
+            if (dyeColor == DyeColor.BLACK) {
+                this.setVariant(HumanoidCowVariant.COFFEE);
             } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(HumanoidBunnyVariant.SNOW);
+                this.setVariant(HumanoidCowVariant.MILKSHAKE);
+            } else if (dyeColor == DyeColor.ORANGE) {
+                this.setVariant(HumanoidCowVariant.MOOSHROOM);
             } else if (dyeColor == DyeColor.YELLOW) {
-                this.setVariant(HumanoidBunnyVariant.SUNDAY);
-            } else if (dyeColor == DyeColor.PINK) {
-                this.setVariant(HumanoidBunnyVariant.STRAWBERRY);
+                this.setVariant(HumanoidCowVariant.MOOBLOOM);
+            } else if (dyeColor == DyeColor.BROWN) {
+                this.setVariant(HumanoidCowVariant.WOOLY);
             }
 
             if (!player.getAbilities().instabuild) {
-                itemStack.shrink(1);
+                itemstack.shrink(1);
             }
 
             this.setPersistenceRequired();
             return InteractionResult.CONSUME;
         }
 
-        if ((itemForHealing.test(itemStack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
+        if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
             if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
-                    itemStack.shrink(1);
+                    itemstack.shrink(1);
                 }
 
                 if (!this.level.isClientSide()) {
@@ -116,7 +133,7 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(itemstack), 1.0f, 1.0f);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -128,11 +145,11 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
-                    itemStack.shrink(1);
+                    itemstack.shrink(1);
                 }
 
                 if (!this.level.isClientSide()) {
-                    this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
+                    this.playSound(this.getEatingSound(itemstack), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
@@ -150,11 +167,16 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
             return InteractionResult.SUCCESS;
         }
 
-        if (itemStack.getItem() == itemForTaming) {
+        if (itemstack.getItem() == itemForTaming) {
             return InteractionResult.PASS;
         }
 
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public boolean isFood(ItemStack stack) {
+        return stack.getItem() == ModItems.KEMOMIMI_POTION.get();
     }
 
     @Override
@@ -163,19 +185,20 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
         if(tamed){
             getAttribute(Attributes.MAX_HEALTH).setBaseValue(60.0D);
             getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-            getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((double) 0.3f);
+            getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f);
         }
         else{
             getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
             getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-            getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((double) 0.3f);
+            getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f);
         }
     }
 
+    /* VARIANTS */
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_146746_, DifficultyInstance p_146747_,
                                         MobSpawnType p_146748_, @Nullable SpawnGroupData p_146749_,
                                         @Nullable CompoundTag p_146750_) {
-        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
+        HumanoidCowVariant variant = Util.getRandom(HumanoidCowVariant.values(), this.random);
         setVariant(variant);
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
     }

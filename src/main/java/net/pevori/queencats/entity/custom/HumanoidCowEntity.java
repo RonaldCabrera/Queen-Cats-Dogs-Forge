@@ -11,11 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
 import net.pevori.queencats.QueenCats;
-import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
+import net.pevori.queencats.entity.variants.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
@@ -40,14 +35,13 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimatable {
+public class HumanoidCowEntity  extends HumanoidAnimalEntity implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
-    protected Ingredient itemForHealing = Ingredient.of(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT.get(), Items.GOLDEN_CARROT);
-    public static final String pekoSan = "pekora";
+    protected Ingredient itemForHealing = Ingredient.of(Items.WHEAT, ModItems.GOLDEN_WHEAT.get());
 
-    protected HumanoidBunnyEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
+    protected HumanoidCowEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -57,11 +51,6 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
         return null;
     }
 
-    public boolean isAlmond(){
-        String s = this.getName().getString();
-        return (s != null && s.toLowerCase().contains(pekoSan));
-    }
-
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.getItem() == ModItems.KEMOMIMI_POTION.get();
@@ -69,65 +58,73 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if(!QueenCats.enableBunnySounds){
+        if(!QueenCats.enableCowSounds){
             return null;
         }
 
-        return ModSounds.HUMANOID_BUNNY_AMBIENT.get();
+        return ModSounds.HUMANOID_COW_AMBIENT.get();
     }
 
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
-        if(!QueenCats.enableBunnySounds){
+        if(!QueenCats.enableCowSounds){
             return null;
         }
 
-        return ModSounds.HUMANOID_BUNNY_EAT.get();
+        return ModSounds.HUMANOID_COW_EAT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        if(!QueenCats.enableBunnySounds){
+        if(!QueenCats.enableCowSounds){
             return null;
         }
 
-        return ModSounds.HUMANOID_BUNNY_HURT.get();
+        return ModSounds.HUMANOID_COW_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        if(!QueenCats.enableBunnySounds){
+        if(!QueenCats.enableCowSounds){
             return null;
         }
 
-        return ModSounds.HUMANOID_BUNNY_DEATH.get();
+        return ModSounds.HUMANOID_COW_DEATH.get();
+    }
+
+    protected SoundEvent getMilkingSound(){
+        if(!QueenCats.enableCowSounds){
+            return null;
+        }
+
+        return ModSounds.HUMANOID_COW_MILK.get();
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RABBIT_JUMP, 0.15f, 1.0f);
+        this.playSound(SoundEvents.COW_STEP, 0.15f, 1.0f);
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isSitting()) {
             event.getController()
-                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.sitting",  ILoopType.EDefaultLoopTypes.LOOP));
+                    .setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcow.sitting",  ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 
         if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.walk",  ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcow.walk",  ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.idle",  ILoopType.EDefaultLoopTypes.LOOP));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcow.idle",  ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
     private PlayState attackPredicate(AnimationEvent event) {
         if(this.swinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidbunny.attack",  ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.humanoidcow.attack",  ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             this.swinging = false;
         }
 
@@ -148,7 +145,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     }
 
     /* TAMEABLE ENTITY */
-    protected static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(HumanoidBunnyEntity.class,
+    protected static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(HumanoidCowEntity.class,
             EntityDataSerializers.BOOLEAN);
 
     public void setSitting(boolean sitting){
@@ -158,6 +155,26 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
 
     public boolean isSitting() {
         return this.entityData.get(SITTING);
+    }
+
+    public boolean isMilkableVariant(){
+        HumanoidCowVariant variant = this.getVariant();
+
+        if(variant != HumanoidCowVariant.MOOSHROOM || variant != HumanoidCowVariant.MOOBLOOM){
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isStewableVariant(){
+        HumanoidCowVariant variant = this.getVariant();
+
+        if(variant == HumanoidCowVariant.MOOSHROOM || variant == HumanoidCowVariant.MOOBLOOM){
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -193,17 +210,17 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
 
     /* VARIANTS */
     protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
-            SynchedEntityData.defineId(HumanoidBunnyEntity.class, EntityDataSerializers.INT);
+            SynchedEntityData.defineId(HumanoidCowEntity.class, EntityDataSerializers.INT);
 
-    public HumanoidBunnyVariant getVariant() {
-        return HumanoidBunnyVariant.byId(this.getTypeVariant() & 255);
+    public HumanoidCowVariant getVariant() {
+        return HumanoidCowVariant.byId(this.getTypeVariant() & 255);
     }
 
     private int getTypeVariant() {
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidBunnyVariant variant) {
+    protected void setVariant(HumanoidCowVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

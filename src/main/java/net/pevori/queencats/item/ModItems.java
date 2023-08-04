@@ -50,6 +50,13 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntityTypes.PRINCESS_BUNNY,0xF3F7FA, 0xDB68ED,
                     new Item.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
 
+    public static final RegistryObject<Item> QUEEN_COW_SPAWN_EGG = ITEMS.register("queen_cow_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.QUEEN_COW,0xF3F7FA, 0xA020F0,
+                    new Item.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
+
+    public static final RegistryObject<Item> PRINCESS_COW_SPAWN_EGG = ITEMS.register("princess_cow_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.PRINCESS_COW,0xF3F7FA, 0xDB68ED,
+                    new Item.Properties().tab(ModCreativeModeTab.QUEENCATS_TAB)));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
