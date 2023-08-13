@@ -220,7 +220,7 @@ public class HumanoidCowEntity  extends HumanoidAnimalEntity implements IAnimata
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidCowVariant variant) {
+    public void setVariant(HumanoidCowVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

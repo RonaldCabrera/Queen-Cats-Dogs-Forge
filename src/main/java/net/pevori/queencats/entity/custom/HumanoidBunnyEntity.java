@@ -203,7 +203,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidBunnyVariant variant) {
+    public void setVariant(HumanoidBunnyVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

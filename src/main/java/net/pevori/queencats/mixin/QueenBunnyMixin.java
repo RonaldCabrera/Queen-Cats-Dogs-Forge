@@ -1,15 +1,19 @@
 package net.pevori.queencats.mixin;
 
+import net.minecraft.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.pevori.queencats.entity.ModEntityTypes;
-import net.pevori.queencats.entity.custom.QueenBunnyEntity;
+import net.pevori.queencats.entity.custom.*;
+import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
+import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -20,17 +24,14 @@ public abstract class QueenBunnyMixin extends Animal {
         super(pEntityType, pLevel);
     }
 
-    /*
-     * This Mixin injection is to make the rabbit turn into a queen bunny
-     * when fed with golden wheat.
-     */
+    //This Mixin injection is to make the Rabbit turn into a Humanoid Bunny when fed with a Kemomimi Potion.
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         Rabbit rabbit = ((Rabbit) (Object) this);
         Item usedItem = player.getItemInHand(hand).getItem();
 
         /*
-         * This is the logic to generate a new Queen Bunny, pretty much the same as
+         * This is the logic to generate a new Humanoid Bunny, pretty much the same as
          * a pig getting hit by lightning.
          */
         if (usedItem == ModItems.KEMOMIMI_POTION.get()) {
@@ -42,19 +43,37 @@ public abstract class QueenBunnyMixin extends Animal {
             queenBunnyEntity.moveTo(rabbit.getX(), rabbit.getY(), rabbit.getZ(), rabbit.getYRot(), rabbit.getXRot());
             queenBunnyEntity.setNoAi(rabbit.isNoAi());
 
-            if (rabbit.hasCustomName()) {
-                queenBunnyEntity.setCustomName(rabbit.getCustomName());
-                queenBunnyEntity.setCustomNameVisible(rabbit.isCustomNameVisible());
+            if (rabbit.isBaby()) {
+                PrincessBunnyEntity princessBunny = ModEntityTypes.PRINCESS_BUNNY.get().create(rabbit.level);
+                spawnHumanoidBunny(princessBunny, rabbit, player);
             }
-
-            queenBunnyEntity.setPersistenceRequired();
-            queenBunnyEntity.setOwnerUUID(player.getUUID());
-            queenBunnyEntity.setTame(true);
-            queenBunnyEntity.setSitting(true);
-            rabbit.level.addFreshEntity(queenBunnyEntity);
-            rabbit.discard();
+            else{
+                QueenBunnyEntity queenBunny = ModEntityTypes.QUEEN_BUNNY.get().create(rabbit.level);
+                spawnHumanoidBunny(queenBunny, rabbit, player);
+            }
         }
 
         return super.mobInteract(player, hand);
+    }
+
+    public void spawnHumanoidBunny(HumanoidBunnyEntity humanoidBunnyEntity, Rabbit rabbit, Player player){
+        humanoidBunnyEntity.moveTo(rabbit.getX(), rabbit.getY(), rabbit.getZ(), rabbit.getYRot(), rabbit.getXRot());
+        humanoidBunnyEntity.setNoAi(rabbit.isNoAi());
+
+        if (rabbit.hasCustomName()) {
+            humanoidBunnyEntity.setCustomName(rabbit.getCustomName());
+            humanoidBunnyEntity.setCustomNameVisible(rabbit.isCustomNameVisible());
+        }
+
+        humanoidBunnyEntity.setPersistenceRequired();
+        humanoidBunnyEntity.setOwnerUUID(player.getUUID());
+        humanoidBunnyEntity.setTame(true);
+        humanoidBunnyEntity.setSitting(true);
+
+        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
+        humanoidBunnyEntity.setVariant(variant);
+
+        rabbit.level.addFreshEntity(humanoidBunnyEntity);
+        rabbit.discard();
     }
 }

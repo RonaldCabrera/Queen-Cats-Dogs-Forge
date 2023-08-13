@@ -195,7 +195,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidDogVariant variant) {
+    public void setVariant(HumanoidDogVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 
