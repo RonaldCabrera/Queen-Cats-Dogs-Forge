@@ -34,6 +34,11 @@ public class ModEntityTypes {
                     .sized(queenSizeWidth, queenSizeHeight)
                     .build(new ResourceLocation(QueenCats.MOD_ID, "queen_bunny").toString()));
 
+    public static final RegistryObject<EntityType<QueenCowEntity>> QUEEN_COW = ENTITY_TYPES.register("queen_cow",
+            () -> EntityType.Builder.of(QueenCowEntity::new, MobCategory.CREATURE)
+                    .sized(queenSizeWidth, queenSizeHeight)
+                    .build(new ResourceLocation(QueenCats.MOD_ID, "queen_cow").toString()));
+
     public static final RegistryObject<EntityType<PrincessCatEntity>> PRINCESS_CAT = ENTITY_TYPES.register("princess_cat",
         () -> EntityType.Builder.of(PrincessCatEntity::new, MobCategory.CREATURE)
                 .sized(princessSizeWidth, princessSizeHeight)
@@ -48,6 +53,11 @@ public class ModEntityTypes {
             () -> EntityType.Builder.of(PrincessBunnyEntity::new, MobCategory.CREATURE)
                     .sized(princessSizeWidth, princessSizeHeight)
                     .build(new ResourceLocation(QueenCats.MOD_ID, "princess_bunny").toString()));
+
+    public static final RegistryObject<EntityType<PrincessCowEntity>> PRINCESS_COW = ENTITY_TYPES.register("princess_cow",
+            () -> EntityType.Builder.of(PrincessCowEntity::new, MobCategory.CREATURE)
+                    .sized(princessSizeWidth, princessSizeHeight)
+                    .build(new ResourceLocation(QueenCats.MOD_ID, "princess_cow").toString()));
 
     public static void register(IEventBus eventBus){
         ENTITY_TYPES.register(eventBus);

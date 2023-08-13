@@ -13,6 +13,8 @@
     "item.queencats.princess_dog_spawn_egg": "Generar Princesa Perro",
     "item.queencats.queen_bunny_spawn_egg": "Generar Reina Conejo",
     "item.queencats.princess_bunny_spawn_egg": "Generar Princesa Conejo",
+    "item.queencats.queen_cow_spawn_egg": "Generar Reina Vaca",
+    "item.queencats.princess_cow_spawn_egg": "Generar Princesa Vaca",
 
     "entity.queencats.queen_cat": "Reina Gato",
     "entity.queencats.princess_cat": "Princesa Gato",
@@ -22,6 +24,9 @@
 
     "entity.queencats.queen_bunny": "Reina Conejo",
     "entity.queencats.princess_bunny": "Princesa Conejo",
+
+    "entity.queencats.queen_cow": "Reina Vaca",
+    "entity.queencats.princess_cow": "Princesa Vaca",
 
     "queencats.humanoid_cat_ambient": "Maullidos de Gato Humanoide",
     "queencats.humanoid_cat_eat": "Gato Humanoide Come",
@@ -36,5 +41,11 @@
     "queencats.humanoid_bunny_ambient": "Ronroneos de Conejo Humanoide",
     "queencats.humanoid_bunny_eat": "Conejo Humanoide Come",
     "queencats.humanoid_bunny_hurt": "Conejo Humanoide Herido",
-    "queencats.humanoid_bunny_death": "Conejo Humanoide Muere"
+    "queencats.humanoid_bunny_death": "Conejo Humanoide Muere",
+
+    "queencats.humanoid_cow_ambient": "Mugidos de Vaca Humanoide",
+    "queencats.humanoid_cow_eat": "Vaca Humanoide Come",
+    "queencats.humanoid_cow_hurt": "Vaca Humanoide Herido",
+    "queencats.humanoid_cow_death": "Vaca Humanoide Muere",
+    "queencats.humanoid_cow_milk": "Vaca Humanoide Ordeñada"
 }

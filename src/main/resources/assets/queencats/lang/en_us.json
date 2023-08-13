@@ -13,6 +13,8 @@
     "item.queencats.princess_dog_spawn_egg": "Princess Dog Spawn Egg",
     "item.queencats.queen_bunny_spawn_egg": "Queen Bunny Spawn Egg",
     "item.queencats.princess_bunny_spawn_egg": "Princess Bunny Spawn Egg",
+    "item.queencats.queen_cow_spawn_egg": "Queen Cow Spawn Egg",
+    "item.queencats.princess_cow_spawn_egg": "Princess Cow Spawn Egg",
 
     "entity.queencats.queen_cat": "Queen Cat",
     "entity.queencats.princess_cat": "Princess Cat",
@@ -22,6 +24,9 @@
 
     "entity.queencats.queen_bunny": "Queen Bunny",
     "entity.queencats.princess_bunny": "Princess Bunny",
+
+    "entity.queencats.queen_cow": "Queen Cow",
+    "entity.queencats.princess_cow": "Princess Cow",
 
     "queencats.humanoid_cat_ambient": "Humanoid Cat Meows",
     "queencats.humanoid_cat_eat": "Humanoid Cat Eats",
@@ -36,5 +41,11 @@
     "queencats.humanoid_bunny_ambient": "Humanoid Bunny Honks",
     "queencats.humanoid_bunny_eat": "Humanoid Bunny Eats",
     "queencats.humanoid_bunny_hurt": "Humanoid Bunny Hurts",
-    "queencats.humanoid_bunny_death": "Humanoid Bunny Dies"
+    "queencats.humanoid_bunny_death": "Humanoid Bunny Dies",
+
+    "queencats.humanoid_cow_ambient": "Humanoid Cow Moos",
+    "queencats.humanoid_cow_eat": "Humanoid Cow Eats",
+    "queencats.humanoid_cow_hurt": "Humanoid Cow Hurts",
+    "queencats.humanoid_cow_death": "Humanoid Cow Dies",
+    "queencats.humanoid_cow_milk": "Humanoid Cow Milked"
 }
