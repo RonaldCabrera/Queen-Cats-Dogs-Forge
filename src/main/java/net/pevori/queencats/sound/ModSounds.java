@@ -38,6 +38,8 @@ public class ModSounds {
     public static RegistryObject<SoundEvent> HUMANOID_COW_MILK = registerSoundEvent("humanoid_cow_milk");
 
 
+    public static RegistryObject<SoundEvent> HUMANOID_ENTITY_SILENT = registerSoundEvent("humanoid_entity_silent");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(QueenCats.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> new SoundEvent(id));

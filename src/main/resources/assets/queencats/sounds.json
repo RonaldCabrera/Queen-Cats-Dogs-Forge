@@ -1,4 +1,10 @@
 {
+    "humanoid_entity_silent": {
+        "sounds": [
+            "queencats:humanoid_entity_silent"
+        ]
+    },
+
     "humanoid_cat_ambient":{
         "subtitle": "queencats.humanoid_cat_ambient",
         "sounds": [

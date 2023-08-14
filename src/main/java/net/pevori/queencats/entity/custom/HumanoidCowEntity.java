@@ -58,7 +58,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getAmbientSound() {
         if(!QueenCats.enableCowSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_COW_AMBIENT.get();
@@ -67,7 +67,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
         if(!QueenCats.enableCowSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_COW_EAT.get();
@@ -76,7 +76,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         if(!QueenCats.enableCowSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_COW_HURT.get();
@@ -85,7 +85,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getDeathSound() {
         if(!QueenCats.enableCowSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_COW_DEATH.get();
