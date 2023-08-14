@@ -103,7 +103,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getAmbientSound() {
         if(!QueenCats.enableCatSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_CAT_AMBIENT.get();
@@ -112,7 +112,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
         if(!QueenCats.enableCatSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_CAT_EAT.get();
@@ -121,7 +121,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         if(!QueenCats.enableCatSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_CAT_HURT.get();
@@ -130,7 +130,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getDeathSound() {
         if(!QueenCats.enableCatSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_CAT_DEATH.get();

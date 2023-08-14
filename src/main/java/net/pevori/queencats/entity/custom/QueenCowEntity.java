@@ -102,7 +102,7 @@ public class QueenCowEntity extends HumanoidCowEntity{
                 this.setVariant(HumanoidCowVariant.COFFEE);
             } else if (dyeColor == DyeColor.WHITE) {
                 this.setVariant(HumanoidCowVariant.MILKSHAKE);
-            } else if (dyeColor == DyeColor.ORANGE) {
+            } else if (dyeColor == DyeColor.RED) {
                 this.setVariant(HumanoidCowVariant.MOOSHROOM);
             } else if (dyeColor == DyeColor.YELLOW) {
                 this.setVariant(HumanoidCowVariant.MOOBLOOM);

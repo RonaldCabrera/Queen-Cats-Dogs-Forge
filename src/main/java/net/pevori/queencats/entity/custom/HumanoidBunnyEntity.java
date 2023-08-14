@@ -70,7 +70,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     @Override
     protected SoundEvent getAmbientSound() {
         if(!QueenCats.enableBunnySounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_BUNNY_AMBIENT.get();
@@ -79,7 +79,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
         if(!QueenCats.enableBunnySounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_BUNNY_EAT.get();
@@ -88,7 +88,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         if(!QueenCats.enableBunnySounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_BUNNY_HURT.get();
@@ -97,7 +97,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     @Override
     protected SoundEvent getDeathSound() {
         if(!QueenCats.enableBunnySounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_BUNNY_DEATH.get();

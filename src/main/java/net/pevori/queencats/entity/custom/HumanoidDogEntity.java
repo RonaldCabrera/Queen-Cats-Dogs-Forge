@@ -94,7 +94,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getAmbientSound() {
         if(!QueenCats.enableDogSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         if(this.isAggressive()){
@@ -107,7 +107,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
         if(!QueenCats.enableDogSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_DOG_EAT.get();
@@ -116,7 +116,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         if(!QueenCats.enableDogSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_DOG_HURT.get();
@@ -125,7 +125,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
     @Override
     protected SoundEvent getDeathSound() {
         if(!QueenCats.enableDogSounds){
-            return null;
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
         }
 
         return ModSounds.HUMANOID_DOG_DEATH.get();
