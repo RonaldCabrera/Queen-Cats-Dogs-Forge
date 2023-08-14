@@ -83,11 +83,11 @@ public class PrincessCowEntity extends HumanoidCowEntity {
                 this.setVariant(HumanoidCowVariant.COFFEE);
             } else if (dyeColor == DyeColor.WHITE) {
                 this.setVariant(HumanoidCowVariant.MILKSHAKE);
-            } else if (dyeColor == DyeColor.BROWN) {
+            } else if (dyeColor == DyeColor.RED) {
                 this.setVariant(HumanoidCowVariant.MOOSHROOM);
             } else if (dyeColor == DyeColor.YELLOW) {
                 this.setVariant(HumanoidCowVariant.MOOBLOOM);
-            } else if (dyeColor == DyeColor.GREEN) {
+            } else if (dyeColor == DyeColor.BROWN) {
                 this.setVariant(HumanoidCowVariant.WOOLY);
             }
 
