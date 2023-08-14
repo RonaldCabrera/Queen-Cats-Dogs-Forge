@@ -11,11 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
 import net.pevori.queencats.QueenCats;
-import net.pevori.queencats.entity.variants.HumanoidCatVariant;
+import net.pevori.queencats.entity.variants.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
@@ -35,24 +30,19 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity {
-    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
-    protected Item itemForTaming = ModItems.GOLDEN_FISH.get();
+public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity {
+    protected AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
+    protected Item itemForTaming = ModItems.GOLDEN_WHEAT.get();
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION.get();
-    protected Ingredient itemForHealing = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.GOLDEN_FISH.get());
-    protected static final EntityDataAccessor<Boolean> SITTING =
-            SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.BOOLEAN);
-    protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
-            SynchedEntityData.defineId(HumanoidCatEntity.class, EntityDataSerializers.INT);
-    public static final String okayuSan = "okayu";
+    protected Ingredient itemForHealing = Ingredient.of(Items.WHEAT, ModItems.GOLDEN_WHEAT.get());
 
-    protected HumanoidCatEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
+    protected HumanoidCowEntity(EntityType<? extends HumanoidAnimalEntity> entityType, Level level) {
         super(entityType, level);
     }
 
     @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
+    public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
         return null;
     }
 
@@ -61,30 +51,74 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         return stack.getItem() == ModItems.KEMOMIMI_POTION.get();
     }
 
-    public boolean isMogu(){
-        String s = this.getName().getString();
-        return (s != null && s.toLowerCase().contains(okayuSan));
+    @Override
+    protected SoundEvent getAmbientSound() {
+        if(!QueenCats.enableCowSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
+        return ModSounds.HUMANOID_COW_AMBIENT.get();
+    }
+
+    @Override
+    public SoundEvent getEatingSound(ItemStack stack) {
+        if(!QueenCats.enableCowSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
+        return ModSounds.HUMANOID_COW_EAT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCats.enableCowSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
+        return ModSounds.HUMANOID_COW_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        if(!QueenCats.enableCowSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
+        return ModSounds.HUMANOID_COW_DEATH.get();
+    }
+
+    protected SoundEvent getMilkingSound(){
+        if(!QueenCats.enableCowSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
+        return ModSounds.HUMANOID_COW_MILK.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(SoundEvents.COW_STEP, 0.15f, 1.0f);
     }
 
     private PlayState predicate(software.bernie.geckolib.core.animation.AnimationState animationState) {
         if (this.isSitting()) {
-            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.sitting", Animation.LoopType.LOOP));
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.sitting", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
         if (animationState.isMoving()) {
-            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.walk", Animation.LoopType.LOOP));
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.walk", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
-        animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.idle", Animation.LoopType.LOOP));
+        animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
     private PlayState attackPredicate(AnimationState state){
         if(this.swinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)){
             state.getController().forceAnimationReset();
-            state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcat.attack", Animation.LoopType.PLAY_ONCE));
+            state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.attack", Animation.LoopType.PLAY_ONCE));
             this.swinging = false;
         }
 
@@ -104,45 +138,37 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         return factory;
     }
 
-    @Override
-    protected SoundEvent getAmbientSound() {
-        if(!QueenCats.enableCatSounds){
-            return ModSounds.HUMANOID_ENTITY_SILENT.get();
-        }
+    /* TAMEABLE ENTITY */
+    protected static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(HumanoidCowEntity.class,
+            EntityDataSerializers.BOOLEAN);
 
-        return ModSounds.HUMANOID_CAT_AMBIENT.get();
+    public void setSitting(boolean sitting){
+        this.entityData.set(SITTING, sitting);
+        this.setOrderedToSit(sitting);
     }
 
-    @Override
-    public SoundEvent getEatingSound(ItemStack stack) {
-        if(!QueenCats.enableCatSounds){
-            return ModSounds.HUMANOID_ENTITY_SILENT.get();
-        }
-
-        return ModSounds.HUMANOID_CAT_EAT.get();
+    public boolean isSitting() {
+        return this.entityData.get(SITTING);
     }
 
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        if(!QueenCats.enableCatSounds){
-            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+    public boolean isMilkableVariant(){
+        HumanoidCowVariant variant = this.getVariant();
+
+        if(variant != HumanoidCowVariant.MOOSHROOM || variant != HumanoidCowVariant.MOOBLOOM){
+            return true;
         }
 
-        return ModSounds.HUMANOID_CAT_HURT.get();
+        return false;
     }
 
-    @Override
-    protected SoundEvent getDeathSound() {
-        if(!QueenCats.enableCatSounds){
-            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+    public boolean isStewableVariant(){
+        HumanoidCowVariant variant = this.getVariant();
+
+        if(variant == HumanoidCowVariant.MOOSHROOM || variant == HumanoidCowVariant.MOOBLOOM){
+            return true;
         }
 
-        return ModSounds.HUMANOID_CAT_DEATH.get();
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.WOLF_STEP, 0.15f, 1.0f);
+        return false;
     }
 
     @Override
@@ -166,15 +192,6 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         this.entityData.define(DATA_ID_TYPE_VARIANT, 0);
     }
 
-    public void setSitting(boolean sitting){
-        this.entityData.set(SITTING, sitting);
-        this.setOrderedToSit(sitting);
-    }
-
-    public boolean isSitting() {
-        return this.entityData.get(SITTING);
-    }
-
     @Override
     public Team getTeam() {
         return super.getTeam();
@@ -185,15 +202,19 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         return false;
     }
 
-    public HumanoidCatVariant getVariant() {
-        return HumanoidCatVariant.byId(this.getTypeVariant() & 255);
+    /* VARIANTS */
+    protected static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
+            SynchedEntityData.defineId(HumanoidCowEntity.class, EntityDataSerializers.INT);
+
+    public HumanoidCowVariant getVariant() {
+        return HumanoidCowVariant.byId(this.getTypeVariant() & 255);
     }
 
-    protected int getTypeVariant() {
+    private int getTypeVariant() {
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    public void setVariant(HumanoidCatVariant variant) {
+    public void setVariant(HumanoidCowVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

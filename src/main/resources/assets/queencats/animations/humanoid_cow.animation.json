@@ -1,0 +1,104 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.humanoidcow.idle": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"tail": {
+					"rotation": [0, "math.sin(query.anim_time*150)*25", 0]
+				},
+				"head": {
+					"position": [0, "math.sin(query.anim_time*75)*0.10", 0]
+				},
+				"rightChest": {
+					"position": [0, 0, 0]
+				},
+				"rightArmBase": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*-5"]
+				},
+				"leftArmBase": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*5"]
+				},
+				"rightArmBase2": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*-5"]
+				},
+				"leftArmBase2": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*5"]
+				},
+				"rightArmJacket": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*-5"]
+				},
+				"leftArmJacket": {
+					"rotation": [0, 0, "math.sin(query.anim_time*150)*5"]
+				}
+			}
+		},
+		"animation.humanoidcow.walk": {
+			"loop": true,
+			"animation_length": 2.375,
+			"bones": {
+				"leftLeg": {
+					"rotation": ["math.sin(query.anim_time*450)*-25", 0, 0]
+				},
+				"rightLeg": {
+					"rotation": ["math.sin(query.anim_time*450)*25", 0, 0]
+				},
+				"tail": {
+					"rotation": [0, "math.sin(query.anim_time*300)*25", 0]
+				},
+				"rightArmBase": {
+					"rotation": ["math.sin(query.anim_time*450)*25", 0, 0]
+				},
+				"leftArmBase": {
+					"rotation": ["math.sin(query.anim_time*450)*-25", 0, 0]
+				},
+				"rightArmJacket": {
+					"rotation": ["math.sin(query.anim_time*450)*25", 0, 0]
+				},
+				"leftArmJacket": {
+					"rotation": ["math.sin(query.anim_time*450)*-25", 0, 0]
+				}
+			}
+		},
+		"animation.humanoidcow.sitting": {
+			"loop": true,
+			"animation_length": 16.58333,
+			"bones": {
+				"rightLeg": {
+					"rotation": ["-87 - this", "8 - this", "-this"]
+				},
+				"leftLeg": {
+					"rotation": ["-87 - this", "-8 - this", "-this"]
+				},
+				"all": {
+					"position": [0, -7, 0]
+				},
+				"head": {
+					"rotation": [0, 0, 0],
+					"position": [0, 0, 0]
+				},
+				"body": {
+					"rotation": [1, 0, 0]
+				},
+				"jacket": {
+					"rotation": [1, 0, 0],
+					"position": [0, 0, 0.06]
+				}
+			}
+		},
+		"animation.humanoidcow.attack": {
+			"loop": true,
+			"animation_length": 0.45833,
+			"bones": {
+				"rightArm": {
+					"rotation": ["math.sin(query.anim_time*400)*-100", "math.sin(query.anim_time*400)*-10", 0]
+				},
+				"leftArm": {
+					"rotation": ["math.sin(query.anim_time*400)*-100", "math.sin(query.anim_time*400)*10", 0]
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

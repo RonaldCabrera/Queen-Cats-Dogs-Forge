@@ -24,6 +24,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
+import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.variants.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -98,6 +99,10 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
 
     @Override
     protected SoundEvent getAmbientSound() {
+        if(!QueenCats.enableDogSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         if(this.isAggressive()){
             return ModSounds.HUMANOID_DOG_ANGRY.get();
         }
@@ -107,16 +112,28 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
 
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
+        if(!QueenCats.enableDogSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_DOG_EAT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCats.enableDogSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_DOG_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
+        if(!QueenCats.enableDogSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_DOG_DEATH.get();
     }
 
@@ -183,7 +200,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidDogVariant variant) {
+    public void setVariant(HumanoidDogVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 

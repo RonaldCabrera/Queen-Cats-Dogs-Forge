@@ -2,6 +2,7 @@ package net.pevori.queencats.entity.custom;
 
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,7 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.pevori.queencats.entity.ModEntityTypes;
 import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
+import net.pevori.queencats.entity.variants.HumanoidCatVariant;
+import net.pevori.queencats.entity.variants.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 
 import javax.annotation.Nullable;
@@ -52,6 +56,21 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+    }
+
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob){
+        PrincessBunnyEntity baby = ModEntityTypes.PRINCESS_BUNNY.get().create(serverLevel);
+        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
+        baby.setVariant(variant);
+
+        if(this.isTame()){
+            baby.tame((Player) this.getOwner());
+            baby.setOwnerUUID(this.getOwnerUUID());
+        }
+
+        return baby;
     }
 
     @Override

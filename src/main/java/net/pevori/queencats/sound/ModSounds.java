@@ -31,6 +31,14 @@ public class ModSounds {
     public static RegistryObject<SoundEvent> HUMANOID_BUNNY_HURT = registerSoundEvent("humanoid_bunny_hurt");
     public static RegistryObject<SoundEvent> HUMANOID_BUNNY_DEATH = registerSoundEvent("humanoid_bunny_death");
 
+    public static RegistryObject<SoundEvent> HUMANOID_COW_AMBIENT = registerSoundEvent("humanoid_cow_ambient");
+    public static RegistryObject<SoundEvent> HUMANOID_COW_EAT = registerSoundEvent("humanoid_cow_eat");
+    public static RegistryObject<SoundEvent> HUMANOID_COW_HURT = registerSoundEvent("humanoid_cow_hurt");
+    public static RegistryObject<SoundEvent> HUMANOID_COW_DEATH = registerSoundEvent("humanoid_cow_death");
+    public static RegistryObject<SoundEvent> HUMANOID_COW_MILK = registerSoundEvent("humanoid_cow_milk");
+
+    public static RegistryObject<SoundEvent> HUMANOID_ENTITY_SILENT = registerSoundEvent("humanoid_entity_silent");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(QueenCats.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));

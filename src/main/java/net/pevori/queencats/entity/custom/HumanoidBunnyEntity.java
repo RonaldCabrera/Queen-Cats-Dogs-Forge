@@ -24,6 +24,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.scores.Team;
+import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -67,21 +68,37 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
 
     @Override
     protected SoundEvent getAmbientSound() {
+        if(!QueenCats.enableBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_BUNNY_AMBIENT.get();
     }
 
     @Override
     public SoundEvent getEatingSound(ItemStack stack) {
+        if(!QueenCats.enableBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_BUNNY_EAT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCats.enableBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_BUNNY_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
+        if(!QueenCats.enableBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT.get();
+        }
+
         return ModSounds.HUMANOID_BUNNY_DEATH.get();
     }
 
@@ -178,7 +195,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
         return this.entityData.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidBunnyVariant variant) {
+    public void setVariant(HumanoidBunnyVariant variant) {
         this.entityData.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }
