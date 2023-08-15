@@ -21,6 +21,7 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.pevori.queencats.entity.ModEntityTypes;
 import net.pevori.queencats.entity.variants.HumanoidBunnyVariant;
@@ -62,6 +63,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
+        Level level = this.getCommandSenderWorld();
 
         super.mobInteract(player, hand);
 
@@ -94,14 +96,14 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         }
 
         if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.heal(10.0f);
 
                     if (this.getHealth() > getMaxHealth()) {
@@ -116,19 +118,19 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         }
 
         else if (item == itemForTaming && !isTame()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
+                    level.broadcastEntityEvent(this, (byte) 7);
                     setSitting(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -137,7 +139,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
@@ -150,8 +152,9 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
     }
 
     public void startGrowth() {
+        Level level = this.getCommandSenderWorld();
         HumanoidBunnyVariant variant = this.getVariant();
-        QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(this.level);
+        QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(level);
 
         queenBunnyEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         queenBunnyEntity.setNoAi(this.isNoAi());
@@ -168,7 +171,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         queenBunnyEntity.setOwnerUUID(this.getOwnerUUID());
         queenBunnyEntity.setTame(true);
         queenBunnyEntity.setSitting(this.isSitting());
-        this.level.addFreshEntity(queenBunnyEntity);
+        level.addFreshEntity(queenBunnyEntity);
         this.discard();
     }
 

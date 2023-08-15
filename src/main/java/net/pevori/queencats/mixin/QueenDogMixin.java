@@ -27,6 +27,7 @@ public abstract class QueenDogMixin extends Animal {
     @Inject(method = "mobInteract", at = @At("HEAD"))
     protected void injectInteractMethod(Player player, InteractionHand hand, CallbackInfoReturnable info) {
         Wolf thisWolf = ((Wolf) (Object) this);
+        Level level = thisWolf.getCommandSenderWorld();
         Item usedItem = player.getItemInHand(hand).getItem();
 
         /*
@@ -39,11 +40,11 @@ public abstract class QueenDogMixin extends Animal {
             }
 
             if (thisWolf.isBaby()) {
-                PrincessDogEntity princessDog = ModEntityTypes.PRINCESS_DOG.get().create(thisWolf.level);
+                PrincessDogEntity princessDog = ModEntityTypes.PRINCESS_DOG.get().create(level);
                 spawnHumanoidDog(princessDog, thisWolf, player);
             }
             else{
-                QueenDogEntity queenDog = ModEntityTypes.QUEEN_DOG.get().create(thisWolf.level);
+                QueenDogEntity queenDog = ModEntityTypes.QUEEN_DOG.get().create(level);
                 spawnHumanoidDog(queenDog, thisWolf, player);
             }
         }
@@ -66,7 +67,7 @@ public abstract class QueenDogMixin extends Animal {
         HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
         humanoidDogEntity.setVariant(variant);
 
-        wolf.level.addFreshEntity(humanoidDogEntity);
+        wolf.getCommandSenderWorld().addFreshEntity(humanoidDogEntity);
         wolf.discard();
     }
 }

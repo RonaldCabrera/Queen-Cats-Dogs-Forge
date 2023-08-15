@@ -3,7 +3,7 @@ package net.pevori.queencats;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -33,6 +33,8 @@ public class QueenCats {
 
     public QueenCats() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModCreativeModeTab.register(eventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, QueenCatsConfig.SERVER_SPEC, "queencats-common.toml");
         QueenCatsConfig.loadConfig(QueenCatsConfig.SERVER_SPEC,
@@ -71,8 +73,8 @@ public class QueenCats {
         ModMenuTypes.registerScreen(event);
     }
 
-    private void addCreative(CreativeModeTabEvent.BuildContents event){
-        if(event.getTab() == ModCreativeModeTab.QUEENCATS_TAB){
+    private void addCreative(BuildCreativeModeTabContentsEvent event){
+        if(event.getTab() == ModCreativeModeTab.QUEENCATS_TAB.get()){
             event.accept(ModItems.GOLDEN_FISH);
             event.accept(ModItems.GOLDEN_BONE);
             event.accept(ModItems.GOLDEN_WHEAT);

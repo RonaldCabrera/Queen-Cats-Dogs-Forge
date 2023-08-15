@@ -61,6 +61,7 @@ public class PrincessDogEntity extends HumanoidDogEntity{
     /* Tamable Entity */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        Level level = this.getCommandSenderWorld();
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
@@ -95,14 +96,14 @@ public class PrincessDogEntity extends HumanoidDogEntity{
         }
 
         if ((isMeat(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.heal(10.0f);
 
                     if (this.getHealth() > getMaxHealth()) {
@@ -117,19 +118,19 @@ public class PrincessDogEntity extends HumanoidDogEntity{
         }
 
         else if (item == itemForTaming && !isTame()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
+                    level.broadcastEntityEvent(this, (byte) 7);
                     setSitting(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -138,7 +139,7 @@ public class PrincessDogEntity extends HumanoidDogEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
@@ -151,8 +152,9 @@ public class PrincessDogEntity extends HumanoidDogEntity{
     }
 
     public void startGrowth() {
+        Level level = this.getCommandSenderWorld();
         HumanoidDogVariant variant = this.getVariant();
-        QueenDogEntity queenDogEntity = ModEntityTypes.QUEEN_DOG.get().create(this.level);
+        QueenDogEntity queenDogEntity = ModEntityTypes.QUEEN_DOG.get().create(level);
 
         queenDogEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         queenDogEntity.setNoAi(this.isNoAi());
@@ -170,7 +172,7 @@ public class PrincessDogEntity extends HumanoidDogEntity{
         queenDogEntity.setTame(true);
         queenDogEntity.setSitting(this.isSitting());
 
-        this.level.addFreshEntity(queenDogEntity);
+        level.addFreshEntity(queenDogEntity);
         this.discard();
     }
 

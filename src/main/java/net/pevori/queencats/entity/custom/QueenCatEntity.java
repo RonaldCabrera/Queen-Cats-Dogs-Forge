@@ -73,6 +73,7 @@ public class QueenCatEntity extends HumanoidCatEntity{
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        Level level = this.getCommandSenderWorld();
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
@@ -106,14 +107,14 @@ public class QueenCatEntity extends HumanoidCatEntity{
         }
 
         if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.heal(10.0f);
 
                     if (this.getHealth() > getMaxHealth()) {
@@ -128,19 +129,19 @@ public class QueenCatEntity extends HumanoidCatEntity{
         }
 
         else if (item == itemForTaming && !isTame()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
+                    level.broadcastEntityEvent(this, (byte) 7);
                     setSitting(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -149,7 +150,7 @@ public class QueenCatEntity extends HumanoidCatEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }

@@ -22,7 +22,7 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
         this(syncId, playerInventory, new SimpleContainer(19));
 
         entityId = buf.readInt();
-        this.entity = (HumanoidAnimalEntity) playerInventory.player.level.getEntity(entityId);
+        this.entity = (HumanoidAnimalEntity) playerInventory.player.getCommandSenderWorld().getEntity(entityId);
     }
 
     public HumanoidAnimalMenu(int syncId, Inventory playerInventory, SimpleContainer inventory) {

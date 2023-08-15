@@ -5,7 +5,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -56,6 +59,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        Level level = this.getCommandSenderWorld();
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
@@ -91,14 +95,14 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         }
 
         if ((itemForHealing.test(itemstack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.heal(10.0f);
 
                     if (this.getHealth() > getMaxHealth()) {
@@ -113,19 +117,19 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         }
 
         else if (item == itemForTaming && !isTame()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.playSound(ModSounds.HUMANOID_CAT_EAT.get(), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
+                    level.broadcastEntityEvent(this, (byte) 7);
                     setSitting(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -134,7 +138,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
@@ -147,8 +151,9 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
     }
 
     public void startGrowth() {
+        Level level = this.getCommandSenderWorld();
         HumanoidCatVariant variant = this.getVariant();
-        QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(this.level);
+        QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(level);
 
         queenCatEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         queenCatEntity.setNoAi(this.isNoAi());
@@ -166,7 +171,7 @@ public class PrincessCatEntity  extends HumanoidCatEntity{
         queenCatEntity.setTame(true);
         queenCatEntity.setSitting(this.isSitting());
 
-        this.level.addFreshEntity(queenCatEntity);
+        level.addFreshEntity(queenCatEntity);
         this.discard();
     }
 

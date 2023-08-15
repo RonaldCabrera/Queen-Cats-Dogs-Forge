@@ -64,6 +64,7 @@ public class PrincessCowEntity extends HumanoidCowEntity {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        Level level = this.getCommandSenderWorld();
         ItemStack itemStack = player.getItemInHand(hand);
         Item item = itemStack.getItem();
 
@@ -100,14 +101,14 @@ public class PrincessCowEntity extends HumanoidCowEntity {
         }
 
         if ((itemForHealing.test(itemStack)) && isTame() && this.getHealth() < getMaxHealth() && !player.isShiftKeyDown()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.heal(10.0f);
 
                     if (this.getHealth() > getMaxHealth()) {
@@ -122,19 +123,19 @@ public class PrincessCowEntity extends HumanoidCowEntity {
         }
 
         else if (item == itemForTaming && !isTame()) {
-            if (this.level.isClientSide()) {
+            if (level.isClientSide()) {
                 return InteractionResult.CONSUME;
             } else {
                 if (!player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
 
-                if (!this.level.isClientSide()) {
+                if (!level.isClientSide()) {
                     this.playSound(this.getEatingSound(itemStack), 1.0f, 1.0f);
                     super.tame(player);
                     this.navigation.recomputePath();
                     this.setTarget(null);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
+                    level.broadcastEntityEvent(this, (byte) 7);
                     setSitting(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -143,7 +144,7 @@ public class PrincessCowEntity extends HumanoidCowEntity {
             }
         }
 
-        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !this.level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
+        if (isTame() && this.isOwnedBy(player) && !player.isShiftKeyDown() && !level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             setSitting(!isSitting());
             return InteractionResult.SUCCESS;
         }
@@ -156,8 +157,9 @@ public class PrincessCowEntity extends HumanoidCowEntity {
     }
 
     public void startGrowth() {
+        Level level = this.getCommandSenderWorld();
         HumanoidCowVariant variant = this.getVariant();
-        QueenCowEntity queenCowEntity = ModEntityTypes.QUEEN_COW.get().create(this.level);
+        QueenCowEntity queenCowEntity = ModEntityTypes.QUEEN_COW.get().create(level);
 
         queenCowEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         queenCowEntity.setNoAi(this.isNoAi());
@@ -175,7 +177,7 @@ public class PrincessCowEntity extends HumanoidCowEntity {
         queenCowEntity.setTame(true);
         queenCowEntity.setSitting(this.isSitting());
 
-        this.level.addFreshEntity(queenCowEntity);
+        level.addFreshEntity(queenCowEntity);
         this.discard();
     }
 

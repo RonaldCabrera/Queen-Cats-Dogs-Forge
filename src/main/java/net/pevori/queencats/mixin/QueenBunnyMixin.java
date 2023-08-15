@@ -28,6 +28,7 @@ public abstract class QueenBunnyMixin extends Animal {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         Rabbit rabbit = ((Rabbit) (Object) this);
+        Level level = rabbit.getCommandSenderWorld();
         Item usedItem = player.getItemInHand(hand).getItem();
 
         /*
@@ -39,16 +40,16 @@ public abstract class QueenBunnyMixin extends Animal {
                 player.getItemInHand(hand).shrink(1);
             }
 
-            QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(rabbit.level);
+            QueenBunnyEntity queenBunnyEntity = ModEntityTypes.QUEEN_BUNNY.get().create(level);
             queenBunnyEntity.moveTo(rabbit.getX(), rabbit.getY(), rabbit.getZ(), rabbit.getYRot(), rabbit.getXRot());
             queenBunnyEntity.setNoAi(rabbit.isNoAi());
 
             if (rabbit.isBaby()) {
-                PrincessBunnyEntity princessBunny = ModEntityTypes.PRINCESS_BUNNY.get().create(rabbit.level);
+                PrincessBunnyEntity princessBunny = ModEntityTypes.PRINCESS_BUNNY.get().create(level);
                 spawnHumanoidBunny(princessBunny, rabbit, player);
             }
             else{
-                QueenBunnyEntity queenBunny = ModEntityTypes.QUEEN_BUNNY.get().create(rabbit.level);
+                QueenBunnyEntity queenBunny = ModEntityTypes.QUEEN_BUNNY.get().create(level);
                 spawnHumanoidBunny(queenBunny, rabbit, player);
             }
         }
@@ -73,7 +74,7 @@ public abstract class QueenBunnyMixin extends Animal {
         HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
         humanoidBunnyEntity.setVariant(variant);
 
-        rabbit.level.addFreshEntity(humanoidBunnyEntity);
+        rabbit.getCommandSenderWorld().addFreshEntity(humanoidBunnyEntity);
         rabbit.discard();
     }
 }

@@ -27,6 +27,7 @@ public abstract class QueenCowMixin extends Animal {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         Cow cow = ((Cow) (Object) this);
+        Level level = cow.getCommandSenderWorld();
         Item usedItem = player.getItemInHand(hand).getItem();
 
         /*
@@ -39,11 +40,11 @@ public abstract class QueenCowMixin extends Animal {
             }
 
             if (cow.isBaby()) {
-                PrincessCowEntity princessCow = ModEntityTypes.PRINCESS_COW.get().create(cow.level);
+                PrincessCowEntity princessCow = ModEntityTypes.PRINCESS_COW.get().create(level);
                 spawnHumanoidCow(princessCow, cow, player);
             }
             else{
-                QueenCowEntity queenCow = ModEntityTypes.QUEEN_COW.get().create(cow.level);
+                QueenCowEntity queenCow = ModEntityTypes.QUEEN_COW.get().create(level);
                 spawnHumanoidCow(queenCow, cow, player);
             }
         }
@@ -68,7 +69,7 @@ public abstract class QueenCowMixin extends Animal {
         HumanoidCowVariant variant = Util.getRandom(HumanoidCowVariant.values(), this.random);
         humanoidCowEntity.setVariant(variant);
 
-        cow.level.addFreshEntity(humanoidCowEntity);
+        cow.getCommandSenderWorld().addFreshEntity(humanoidCowEntity);
         cow.discard();
     }
 }

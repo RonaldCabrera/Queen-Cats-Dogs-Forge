@@ -29,6 +29,7 @@ public abstract class QueenCatMixin extends Animal {
     @Inject(method = "mobInteract", at = @At("HEAD"))
     protected void injectInteractMethod(Player player, InteractionHand hand, CallbackInfoReturnable info) {
         Cat thisCat = ((Cat)(Object)this);
+        Level level = thisCat.getCommandSenderWorld();
         Item usedItem = player.getItemInHand(hand).getItem();
 
         /*
@@ -40,16 +41,16 @@ public abstract class QueenCatMixin extends Animal {
                 player.getItemInHand(hand).shrink(1);
             }
 
-            QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(thisCat.level);
+            QueenCatEntity queenCatEntity = ModEntityTypes.QUEEN_CAT.get().create(level);
             queenCatEntity.moveTo(thisCat.getX(), thisCat.getY(), thisCat.getZ(), thisCat.getYRot(), thisCat.getXRot());
             queenCatEntity.setNoAi(thisCat.isNoAi());
 
             if (thisCat.isBaby()) {
-                PrincessCatEntity princessCat = ModEntityTypes.PRINCESS_CAT.get().create(thisCat.level);
+                PrincessCatEntity princessCat = ModEntityTypes.PRINCESS_CAT.get().create(level);
                 spawnHumanoidCat(princessCat, thisCat, player);
             }
             else{
-                QueenCatEntity queenCat = ModEntityTypes.QUEEN_CAT.get().create(thisCat.level);
+                QueenCatEntity queenCat = ModEntityTypes.QUEEN_CAT.get().create(level);
                 spawnHumanoidCat(queenCat, thisCat, player);
             }
         }
@@ -72,7 +73,7 @@ public abstract class QueenCatMixin extends Animal {
         HumanoidCatVariant variant = Util.getRandom(HumanoidCatVariant.values(), this.random);
         humanoidCatEntity.setVariant(variant);
 
-        cat.level.addFreshEntity(humanoidCatEntity);
+        cat.getCommandSenderWorld().addFreshEntity(humanoidCatEntity);
         cat.discard();
     }
 }

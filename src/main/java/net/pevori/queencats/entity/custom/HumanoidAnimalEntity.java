@@ -61,19 +61,20 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        Level level = this.getCommandSenderWorld();
         ItemStack itemStack = player.getItemInHand(hand);
 
-        if (!this.level.isClientSide &&  this.isOwnedBy(player) && !this.isBaby() && this.hasArmorSlot() && this.isEquippableArmor(itemStack) && !this.hasArmorInSlot()) {
+        if (!level.isClientSide &&  this.isOwnedBy(player) && !this.isBaby() && this.hasArmorSlot() && this.isEquippableArmor(itemStack) && !this.hasArmorInSlot()) {
             this.equipArmor(player, itemStack);
             this.equipArmor(itemStack);
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        if (!this.level.isClientSide && player instanceof ServerPlayer serverPlayer && player.isShiftKeyDown()) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer && player.isShiftKeyDown()) {
             NetworkHooks.openScreen(serverPlayer, this, buf -> {
                 buf.writeInt(this.getId());
             });
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return super.mobInteract(player, hand);
