@@ -1,44 +1,44 @@
 package net.pevori.queencats.gui.menu;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.pevori.queencats.entity.custom.HumanoidAnimalEntity;
 
 public class HumanoidAnimalMenu extends AbstractContainerMenu {
-    private final Container inventory;
+    private SimpleContainer inventory;
     private int entityId;
     private HumanoidAnimalEntity entity;
 
     public HumanoidAnimalMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, playerInventory, new SimpleContainer(19));
+        this(syncId, playerInventory, (HumanoidAnimalEntity) Minecraft.getInstance().level.getEntity(buf.readInt()));
 
-        entityId = buf.readInt();
+        this.entityId = buf.readInt();
+
+        this.inventory = new SimpleContainer(19);
         this.entity = (HumanoidAnimalEntity) playerInventory.player.level.getEntity(entityId);
+        this.inventory.startOpen(playerInventory.player);
     }
 
-    public HumanoidAnimalMenu(int syncId, Inventory playerInventory, SimpleContainer inventory) {
+    public HumanoidAnimalMenu(int syncId, Inventory playerInventory, HumanoidAnimalEntity entity) {
         super(ModMenuTypes.HUMANOID_ANIMAL_MENU.get(), syncId);
+        SimpleContainer entityInventory = entity.getInventory();
+        checkContainerSize(entityInventory, entity.getInventorySize());
+        this.inventory = entityInventory;
 
-        checkContainerSize(inventory, 19);
-        this.inventory = inventory;
+        this.addSlot(getCustomArmorSlot());
+        this.addHumanoidAnimalInventory(inventory);
+        this.addPlayerInventory(playerInventory);
+    }
 
-        inventory.startOpen(playerInventory.player);
-
-        //This will add the slot to place the armor in the HumanoidAnimal inventory.
-        Slot customSlot = getCustomArmorSlot();
-        this.addSlot(customSlot);
-
-        //This will place the slot in the correct locations for a 4x5 Grid. The slots exist on both server and client!
-        //This will not render the background of the slots however, this is the Screens job
+    private void addHumanoidAnimalInventory(SimpleContainer inventory) {
         int m, l;
         //The Humanoid Animal´s inventory
         for (m = 0; m < 3; ++m) {
@@ -46,7 +46,11 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
                 this.addSlot(new Slot(inventory, 1 + l + m * getInventoryColumns(), 62 + l * 18, 18 + m * 18));
             }
         }
+    }
 
+    private void addPlayerInventory(Inventory playerInventory) {
+        int l;
+        int m;
         //The player inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
@@ -58,7 +62,6 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
-
     }
 
     @Override
@@ -117,8 +120,6 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.inventory.setChanged();
-
         this.inventory.stopOpen(player);
     }
 
@@ -130,7 +131,6 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
         return 6;
     }
 
-    // Generates the new armor slot trying to avoid null exceptions.
     public Slot getCustomArmorSlot(){
         return new Slot(inventory, 0, 8, 36) {
             public boolean mayPlace(ItemStack stack) {
@@ -139,7 +139,6 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
 
             public boolean isActive() {
                 return entity.hasArmorSlot();
-                //return true;
             }
 
             public int getMaxStackSize() {
@@ -149,27 +148,6 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
     }
 
     public boolean isValidArmor(ItemStack itemStack){
-        return Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE).test(itemStack);
-    }
-
-    @Override
-    public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
-        super.clicked(pSlotId, pButton, pClickType, pPlayer);
-        ItemStack itemStack = inventory.getItem(pSlotId);
-
-        /*if(entity == null){
-            entity = (HumanoidAnimalEntity) pPlayer.level.getEntity(entityId);
-        }*/
-
-        if (pSlotId == 0 && pClickType == ClickType.PICKUP){
-            // If the slot was empty, equip the armor on the entity
-            if(itemStack.isEmpty()){
-                entity.unEquipArmor();
-            }
-            else {
-                entity.equipArmor(itemStack);
-            }
-        }
+        return itemStack.getItem() instanceof ArmorItem item && item.getSlot() == EquipmentSlot.CHEST;
     }
 }

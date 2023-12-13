@@ -42,13 +42,4 @@ public class ModMenuTypes {
                 () -> MenuScreens.register(HUMANOID_ANIMAL_MENU.get(), HumanoidAnimalScreen::new)
         );
     }
-
-//    public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, QueenCats.MOD_ID);
-//    //public static final ResourceLocation HUMANOID_ANIMAL_SCREEN = new ResourceLocation(QueenCats.MOD_ID, "humanoid_animal_screen");
-//    public static RegistryObject<MenuType<HumanoidAnimalMenu>> HUMANOID_ANIMAL_SCREEN_HANDLER = null;
-//
-//    public static void registerScreenHandler(){
-//        HUMANOID_ANIMAL_SCREEN_HANDLER = CONTAINERS.register("humanoid_animal_screen_handler", () -> IForgeMenuType.create(HumanoidAnimalMenu::new));
-//    }
-//
 }
