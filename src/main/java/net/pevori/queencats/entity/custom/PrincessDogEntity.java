@@ -31,6 +31,11 @@ public class PrincessDogEntity extends HumanoidDogEntity {
         super(entityType, level);
     }
 
+    @Override
+    public boolean isBaby() {
+        return true;
+    }
+
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
