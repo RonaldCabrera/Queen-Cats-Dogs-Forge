@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
@@ -90,14 +91,14 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
     }
 
     public boolean isValidArmor(ItemStack itemStack){
-        return itemStack.getItem() instanceof ArmorItem item && item.getSlot() == EquipmentSlot.CHEST;
+        return itemStack.getItem() instanceof ArmorItem item && item.getEquipmentSlot() == EquipmentSlot.CHEST;
     }
 
     public void equipArmor(Player player, ItemStack stack) {
         if(!this.getLevel().isClientSide()){
             if (this.isValidArmor(stack)) {
                 this.inventory.setItem(0, new ItemStack(stack.getItem()));
-                this.playSound(stack.getEquipSound(), 0.5F, 1.0F);
+                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
                 equipArmor(stack);
                 this.inventory.setChanged();
 
@@ -168,8 +169,7 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
         this.syncInventoryToFlags();
 
         if (this.age > 20 && !previouslyEquipped && this.hasArmorInSlot()) {
-            SoundEvent armorInSlotEquipSound = this.inventory.getItem(0).getEquipSound();
-            this.playSound(armorInSlotEquipSound, 0.5F, 1.0F);
+            this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
         }
     }
 

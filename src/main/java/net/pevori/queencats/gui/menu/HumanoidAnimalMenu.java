@@ -148,6 +148,6 @@ public class HumanoidAnimalMenu extends AbstractContainerMenu {
     }
 
     public boolean isValidArmor(ItemStack itemStack){
-        return itemStack.getItem() instanceof ArmorItem item && item.getSlot() == EquipmentSlot.CHEST;
+        return itemStack.getItem() instanceof ArmorItem item && item.getEquipmentSlot() == EquipmentSlot.CHEST;
     }
 }
