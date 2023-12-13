@@ -70,7 +70,7 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
 
-        if (!this.level.isClientSide && player instanceof ServerPlayer serverPlayer && player.isShiftKeyDown()) {
+        if (!this.level.isClientSide && this.isOwnedBy(player) && player instanceof ServerPlayer serverPlayer && player.isShiftKeyDown()) {
             NetworkHooks.openScreen(serverPlayer, this, buf -> {
                 buf.writeInt(this.getId());
                 buf.writeInt(this.getId());
