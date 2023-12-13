@@ -1,9 +1,7 @@
 package net.pevori.queencats.entity.custom;
 
-import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,9 +16,8 @@ import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
@@ -33,16 +30,13 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
     protected static final String ARMOR_KEY = "Humanoid_Animal_Armor_Item";
     protected static final String SLOT_KEY = "Humanoid_Animal_Inventory_Slot";
     protected SimpleContainer inventory;
-    protected Ingredient equippableArmor = Ingredient.of(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
 
     protected HumanoidAnimalEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
         this.inventory = new SimpleContainer(19);
 
-        // Allows pathfinding through doors
-        ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
-        ((GroundPathNavigation) this.getNavigation()).setCanPassDoors(true);
+        this.updateInventory();
+        this.registerDoorNavigation();
     }
 
     @Override
@@ -53,6 +47,12 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
     }
 
+    private void registerDoorNavigation(){
+        // Allows pathfinding through doors
+        ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
+        ((GroundPathNavigation) this.getNavigation()).setCanPassDoors(true);
+    }
+
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
@@ -61,20 +61,19 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        Level level = this.getCommandSenderWorld();
         ItemStack itemStack = player.getItemInHand(hand);
 
-        if (!level.isClientSide &&  this.isOwnedBy(player) && !this.isBaby() && this.hasArmorSlot() && this.isEquippableArmor(itemStack) && !this.hasArmorInSlot()) {
+        if (!this.level().isClientSide() &&  this.isOwnedBy(player) && !this.isBaby() && this.hasArmorSlot() && this.isValidArmor(itemStack) && !this.hasArmorInSlot()) {
             this.equipArmor(player, itemStack);
-            this.equipArmor(itemStack);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer && player.isShiftKeyDown()) {
+        if (!this.level().isClientSide() && player instanceof ServerPlayer serverPlayer && player.isShiftKeyDown()) {
             NetworkHooks.openScreen(serverPlayer, this, buf -> {
                 buf.writeInt(this.getId());
+                buf.writeInt(this.getId());
             });
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
         return super.mobInteract(player, hand);
@@ -88,31 +87,55 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
         return this.hasItemInSlot(EquipmentSlot.CHEST);
     }
 
-    public boolean isEquippableArmor(ItemStack itemStack){
-        return equippableArmor.test(itemStack);
+    public boolean isValidArmor(ItemStack itemStack){
+        return itemStack.getItem() instanceof ArmorItem item && item.getEquipmentSlot() == EquipmentSlot.CHEST;
     }
 
     public void equipArmor(Player player, ItemStack stack) {
-        if (this.isEquippableArmor(stack)) {
-            this.inventory.setItem(0, new ItemStack(stack.getItem()));
-            this.playSound(SoundEvents.HORSE_ARMOR, 0.5F, 1.0F);
-            this.inventory.setChanged();
+        if(!this.level().isClientSide()){
+            if (this.isValidArmor(stack)) {
+                this.inventory.setItem(0, new ItemStack(stack.getItem()));
+                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
+                equipArmor(stack);
+                this.inventory.setChanged();
 
-            if (!player.getAbilities().instabuild) {
-                stack.shrink(1);
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
             }
         }
     }
 
     public void equipArmor(ItemStack stack) {
-        if (this.isEquippableArmor(stack)) {
-            this.setItemSlot(EquipmentSlot.CHEST, stack);
-            this.setDropChance(EquipmentSlot.CHEST, 0.0F);
+        if(!this.level().isClientSide()){
+            if (this.isValidArmor(stack)) {
+                this.setItemSlot(EquipmentSlot.CHEST, stack);
+                this.setDropChance(EquipmentSlot.CHEST, 0.0F);
+            }
         }
     }
 
-    public void unEquipArmor(){
-        this.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
+    public int getInventorySize() {
+        return 19;
+    }
+
+    protected void updateInventory() {
+        var previousInventory = this.inventory;
+        this.inventory = new SimpleContainer(this.getInventorySize());
+        if (previousInventory != null) {
+            previousInventory.removeListener(this);
+            int maxSize = Math.min(previousInventory.getContainerSize(), this.inventory.getContainerSize());
+
+            for (int slot = 0; slot < maxSize; ++slot) {
+                var stack = previousInventory.getItem(slot);
+                if (!stack.isEmpty()) {
+                    this.inventory.setItem(slot, stack.copy());
+                }
+            }
+        }
+
+        this.inventory.addListener(this);
+        this.syncInventoryToFlags();
     }
 
     @Override
@@ -128,9 +151,23 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
         }
     }
 
+    /**
+     * Syncs the flags with the inventory.
+     */
+    public void syncInventoryToFlags() {
+        if (!this.level().isClientSide()) {
+            this.equipArmor(this.inventory.getItem(0));
+        }
+    }
+
     @Override
     public void containerChanged(Container pContainer) {
-        //this.inventory = pContainer;
+        boolean previouslyEquipped = this.hasArmorInSlot();
+        this.syncInventoryToFlags();
+
+        if (this.age > 20 && !previouslyEquipped && this.hasArmorInSlot()) {
+            this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
+        }
     }
 
     @Override
@@ -166,7 +203,7 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
         if (nbt.contains(ARMOR_KEY, 10)) {
             ItemStack itemStack = ItemStack.of(nbt.getCompound(ARMOR_KEY));
 
-            if (!itemStack.isEmpty() && this.isEquippableArmor(itemStack)) {
+            if (!itemStack.isEmpty() && this.isValidArmor(itemStack)) {
                 this.inventory.setItem(0, itemStack);
                 this.equipArmor(itemStack);
             }
@@ -190,6 +227,14 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
         }
     }
 
+    public SimpleContainer getInventory(){
+        if(this.inventory == null){
+            return new SimpleContainer(getInventorySize());
+        }
+
+        return this.inventory;
+    }
+
     @Override
     public boolean wantsToAttack(LivingEntity entity, LivingEntity owner) {
         if (!(entity instanceof Creeper) && !(entity instanceof Ghast)) {
@@ -211,9 +256,7 @@ public class HumanoidAnimalEntity extends TamableAnimal implements ContainerList
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
-        //We provide this to the screenHandler as our class Implements Inventory
-        //Only the Server has the Inventory at the start, this will be synced to the client in the ScreenHandler
-        return new HumanoidAnimalMenu(syncId, playerInventory, inventory);
+        return new HumanoidAnimalMenu(syncId, playerInventory, this);
     }
 
     @Override

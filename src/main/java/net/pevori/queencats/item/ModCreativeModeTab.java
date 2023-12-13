@@ -15,7 +15,7 @@ public class ModCreativeModeTab {
 
     public static RegistryObject<CreativeModeTab> QUEENCATS_TAB = CREATIVE_MODE_TABS.register("queencats_tab", () ->
             CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.GOLDEN_FISH.get()))
-                    .title(Component.literal("Queen Cats Tab")).build());
+                    .title(Component.literal("Queen Cats & Dogs")).build());
 
     public static void register(IEventBus eventBus){
         CREATIVE_MODE_TABS.register(eventBus);
