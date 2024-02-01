@@ -24,7 +24,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // MixinGradle:
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.0.5-1.19.3-Forge'
+version = '1.0.6-1.19.3-Forge'
 group = 'net.pevori.queencats' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'queencats'
 
